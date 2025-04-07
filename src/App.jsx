@@ -22,9 +22,9 @@ const App = () => {
         <Hero />
         <WorkoutSessions />
         <Gallery />
+        <BMICalculator />
         <Pricing />
         <Contact />
-        <BMICalculator />
         {/* <Footer /> */}
         <ToastContainer theme="dark" position="top-center" />
       </div>
