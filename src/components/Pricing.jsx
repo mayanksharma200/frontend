@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -25,76 +25,100 @@ const Pricing = () => {
     },
   ];
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768; // 👈 detect mobile screens
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize(); // check once
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   return (
     <section id="Pricing" className="pricing py-20 bg-gray-950 text-white">
-      <motion.h1
-        className="text-4xl md:text-5xl font-bold text-center mb-16"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }} // 👈 Animate once
-        transition={{ duration: 0.6 }}
-      >
-        ELITE EDGE FITNESS PLANS
-      </motion.h1>
+      {!isMobile ? (
+        <motion.h1
+          className="text-4xl md:text-5xl font-bold text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
+          ELITE EDGE FITNESS PLANS
+        </motion.h1>
+      ) : (
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-16">
+          ELITE EDGE FITNESS PLANS
+        </h1>
+      )}
 
       <div className="wrapper grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto px-6">
-        {pricing.map((element, index) => (
-          <motion.div
-            key={element.title}
-            className="card bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition transform duration-300"
-            initial={isMobile ? false : { opacity: 0, y: 50 }}
-            whileInView={isMobile ? false : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }} // 👈 Animate only once
-            transition={{ delay: index * 0.2 }}
-          >
-            <img
-              src={element.imgUrl}
-              alt={element.title}
-              className="w-full h-56 object-cover"
-            />
-            <div className="p-6 space-y-4">
-              <div className="title text-center">
-                <h1 className="text-2xl font-bold">{element.title}</h1>
-                <h2 className="text-lg text-purple-400 font-semibold mt-1">
-                  PACKAGE
-                </h2>
-                <h3 className="text-3xl font-bold text-purple-500 mt-4">
-                  Rs {element.price}
-                </h3>
-                <p className="text-gray-400">For {element.length} Months</p>
-              </div>
+        {pricing.map((element, index) => {
+          const Card = isMobile ? "div" : motion.div;
 
-              <div className="description mt-6 space-y-3 text-gray-300">
-                <div className="flex items-center gap-3">
-                  <Check className="text-purple-400" /> Equipment
+          return (
+            <Card
+              key={element.title}
+              className="card bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition transform duration-300"
+              {...(!isMobile && {
+                initial: { opacity: 0, y: 50 },
+                whileInView: { opacity: 1, y: 0 },
+                viewport: { once: false, amount: 0.3 },
+                transition: { delay: index * 0.2 },
+              })}
+            >
+              <img
+                src={element.imgUrl}
+                alt={element.title}
+                className="w-full h-56 object-cover"
+              />
+              <div className="p-6 space-y-4">
+                <div className="title text-center">
+                  <h1 className="text-2xl font-bold">{element.title}</h1>
+                  <h2 className="text-lg text-purple-400 font-semibold mt-1">
+                    PACKAGE
+                  </h2>
+                  <h3 className="text-3xl font-bold text-purple-500 mt-4">
+                    Rs {element.price}
+                  </h3>
+                  <p className="text-gray-400">For {element.length} Months</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Check className="text-purple-400" /> All Day Free Training
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className="text-purple-400" /> Free Restroom
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className="text-purple-400" /> 24/7 Skilled Support
-                </div>
-                <div className="flex items-center gap-3">
-                  <Check className="text-purple-400" /> 20 Days Freezing Option
-                </div>
-              </div>
 
-              <div className="flex justify-center mt-6">
-                <Link
-                  to={"/"}
-                  className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition"
-                >
-                  Join Now
-                </Link>
+                <div className="description mt-6 space-y-3 text-gray-300">
+                  <div className="flex items-center gap-3">
+                    <Check className="text-purple-400" /> Equipment
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="text-purple-400" /> All Day Free Training
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="text-purple-400" /> Free Restroom
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="text-purple-400" /> 24/7 Skilled Support
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="text-purple-400" /> 20 Days Freezing
+                    Option
+                  </div>
+                </div>
+
+                <div className="flex justify-center mt-6">
+                  <Link
+                    to={"/"}
+                    className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition"
+                  >
+                    Join Now
+                  </Link>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </Card>
+          );
+        })}
       </div>
     </section>
   );
