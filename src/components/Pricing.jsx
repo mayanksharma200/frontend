@@ -25,13 +25,15 @@ const Pricing = () => {
     },
   ];
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768; // 👈 detect mobile screens
+
   return (
     <section id="Pricing" className="pricing py-20 bg-gray-950 text-white">
       <motion.h1
         className="text-4xl md:text-5xl font-bold text-center mb-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3 }} // 👈 Replay when visible again
+        viewport={{ once: true, amount: 0.3 }} // 👈 Animate once
         transition={{ duration: 0.6 }}
       >
         ELITE EDGE FITNESS PLANS
@@ -42,9 +44,9 @@ const Pricing = () => {
           <motion.div
             key={element.title}
             className="card bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition transform duration-300"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }} // 👈 Replay animation
+            initial={isMobile ? false : { opacity: 0, y: 50 }}
+            whileInView={isMobile ? false : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }} // 👈 Animate only once
             transition={{ delay: index * 0.2 }}
           >
             <img
