@@ -79,7 +79,7 @@ const Navbar = () => {
 
         {/* Mobile Drawer */}
         {mobileDrawerOpen && (
-          <div className="fixed inset-0 z-20 flex flex-col items-start justify-start pt-24 px-6 bg-neutral-900/80 backdrop-blur-lg lg:hidden min-h-screen">
+          <div className="fixed inset-0 z-20 flex flex-col items-start justify-start pt-24 px-6 bg-neutral-900 lg:hidden min-h-screen">
             {/* Close Button */}
             <button
               onClick={toggleNavbar}
@@ -116,7 +116,7 @@ const Navbar = () => {
               </a>
               <a
                 href="#"
-                className="py-2 px-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800 text-white hover:opacity-90 transition"
+                className="py-2 px-3 rounded-md bg-gradient-to-r from-purple-500 to-purple-800 text-white hover:opacity-90 transition"
               >
                 Create an account
               </a>
