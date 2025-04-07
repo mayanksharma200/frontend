@@ -13,6 +13,7 @@ import Pricing from "./components/Pricing";
 import Contact from "./components/Contact";
 import BMICalculator from "./components/BMICalculator";
 import Footer from "./components/Footer";
+import CaloriesCalculator from "./components/CaloriesCalculator";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Hero />
         <WorkoutSessions />
         <Gallery />
+        <CaloriesCalculator/>
         <BMICalculator />
         <Pricing />
         <Contact />
