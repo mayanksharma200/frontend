@@ -25,13 +25,23 @@ const Pricing = () => {
     },
   ];
 
+  // Define motion variants for better control
+  const cardVariants = {
+    offscreen: { opacity: 0, y: 50 },
+    onscreen: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", bounce: 0.2, duration: 0.8 },
+    },
+  };
+
   return (
     <section id="Pricing" className="pricing py-20 bg-gray-950 text-white">
       <motion.h1
         className="text-4xl md:text-5xl font-bold text-center mb-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3 }} // 👈 Replay when visible again
+        viewport={{ once: false, amount: 0.3 }}
         transition={{ duration: 0.6 }}
       >
         ELITE EDGE FITNESS PLANS
@@ -41,11 +51,11 @@ const Pricing = () => {
         {pricing.map((element, index) => (
           <motion.div
             key={element.title}
-            className="card bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition transform duration-300"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }} // 👈 Replay animation
-            transition={{ delay: index * 0.2 }}
+            className="card bg-gray-900 rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-300"
+            initial="offscreen"
+            whileInView="onscreen"
+            viewport={{ once: false, amount: 0.3 }}
+            variants={cardVariants}
           >
             <img
               src={element.imgUrl}
