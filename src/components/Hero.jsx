@@ -1,7 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // import useNavigate
 
 const Hero = () => {
+  const navigate = useNavigate(); // initialize navigate
+
   return (
     <section
       className="hero relative h-[100vh] md:h-[110vh] flex items-center justify-center text-white px-6 overflow-hidden"
@@ -87,6 +90,7 @@ const Hero = () => {
             whileTap={{ scale: 0.95 }}
             className="px-12 py-5 bg-purple-600 hover:bg-purple-700 transition-all rounded-full font-bold text-lg shadow-xl tracking-wide"
             transition={{ type: "spring", stiffness: 300 }}
+            onClick={() => navigate("/journey")} // <-- navigate on click
           >
             Start Your Journey
           </motion.button>
