@@ -6,22 +6,22 @@ const TopReads = () => {
     {
       id: "insurance-therapy",
       title: "How to Know If Your Insurance Covers Therapy",
-      image: "/img5.jpg", // Replace with your image path
+      image: "/insuranceThink.png", // Replace with your image path
     },
     {
       id: "high-cortisol",
       title: "What Are the Symptoms and Causes of High Cortisol Levels?",
-      image: "/img6.jpg",
+      image: "/cortison.png",
     },
     {
       id: "comforting-recipes",
       title: "Comforting Recipes for a Cozy Dinner",
-      image: "/img7.jpg",
+      image: "/family.png",
     },
     {
       id: "toxic-work",
       title: "How to Deal With a Toxic Work Environment",
-      image: "/img8.jpg",
+      image: "/environment.png",
     },
   ];
 

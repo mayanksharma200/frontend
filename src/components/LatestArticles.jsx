@@ -8,14 +8,14 @@ const LatestArticles = () => {
       title: "Cold Shower Benefits for Your Health",
       excerpt: "You'll want the water to be below a certain temperature.",
       readTime: "3 min read",
-      image: "/img1.webp",
+      image: "/shower.png",
     },
     {
       id: "healthy-dinner-recipes",
       title: "5 Healthy Dinner Recipes in 15 Minutes or Less",
       excerpt: "Cook, eat, and move on with the rest of your evening.",
       readTime: "4 min read",
-      image: "/img2.jpg",
+      image: "/foodrecipe.jpg",
     },
     {
       id: "mouth-taping-experiment",
@@ -23,7 +23,7 @@ const LatestArticles = () => {
       excerpt:
         "Mouth taping isn't suitable for everyone — just ask this Healthline editor.",
       readTime: "6 min read",
-      image: "/img3.jpg",
+      image: "/sleep.jpg",
     },
     {
       id: "tuberculosis-warning",
@@ -32,7 +32,7 @@ const LatestArticles = () => {
       excerpt:
         "Experts say the European situation should concern people in the U.S.",
       readTime: "5 min read",
-      image: "/img4.jpg",
+      image: "/doctor.png",
     },
   ];
 

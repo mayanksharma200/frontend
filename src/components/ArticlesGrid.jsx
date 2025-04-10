@@ -8,17 +8,21 @@ const ArticlesGrid = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
+        setLoading(true);
         const { data } = await axios.get(
           "https://fitness-backend-api.vercel.app/api/posts/top-articles"
         );
         setArticles(data);
+        setError(null);
       } catch (err) {
         console.error(err);
         setError("Could not load articles.");
+        setRetryCount((prev) => prev + 1);
       } finally {
         setLoading(false);
       }
@@ -75,16 +79,25 @@ const ArticlesGrid = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-white">
-        Loading articles...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+        <p className="text-gray-400">
+          {retryCount > 0 ? "Retrying..." : "Loading articles..."}
+        </p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen text-red-500">
-        {error}
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+        <div className="text-red-400 mb-4">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-purple-600 rounded-md text-white hover:bg-purple-700 transition-colors"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
@@ -175,7 +188,7 @@ const ArticlesGrid = () => {
                       className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-2 py-1 rounded-full ml-3"
                       whileHover={{ scale: 1.05 }}
                     >
-                      5 min read
+                      {article.meta?.readTime || "5 min read"}
                     </motion.span>
                   </div>
 
@@ -227,6 +240,7 @@ const ArticlesGrid = () => {
             whileTap={{ scale: 0.97 }}
             className="px-6 py-2 border-2 border-purple-400 text-purple-400 rounded-full font-bold shadow-lg text-base"
             transition={{ type: "spring", stiffness: 400 }}
+            onClick={() => navigate("/articles")}
           >
             View All Articles
           </motion.button>

@@ -5,7 +5,7 @@ const CategoryFilter = () => {
   const categories = [
     {
       name: "VIEW ALL",
-      image: "/vite.svg",
+      image: "/view4.png",
     },
     {
       name: "Nutrition",

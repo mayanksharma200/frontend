@@ -39,13 +39,17 @@ const ArticleDetail = () => {
     fetchArticle();
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Loading article...</div>
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-400 mb-4"></div>
+      <p className="text-gray-300">
+        {error ? "Retrying..." : "Loading content..."}
+      </p>
+    </div>
+  );
+}
+
 
   if (error) {
     return (
@@ -73,13 +77,13 @@ const ArticleDetail = () => {
 
   return (
     <motion.div
-      className="min-h-screen bg-gray-900"
+      className="min-h-screen bg-gray-900 w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Changed mx-auto to ml-0 to align left */}
-      <div className="max-w-4/5 max-h-full ml-0 md:ml-15 px-4 sm:px-6 lg:px-8 py-12 w-full">
+      {/* Updated container with full width on mobile and proper responsive behavior */}
+      <div className="w-full px-4 py-12 md:ml-15 md:max-w-[78%] lg:px-8 mx-auto">
         <motion.button
           onClick={() => navigate(-1)}
           className="flex items-center text-purple-400 mb-8 hover:text-purple-300 transition-colors"
@@ -101,7 +105,7 @@ const ArticleDetail = () => {
         </motion.button>
 
         <motion.article
-          className="bg-gray-800 rounded-xl shadow-2xl overflow-hidden"
+          className="bg-gray-800 rounded-xl shadow-2xl overflow-hidden w-full"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -123,7 +127,7 @@ const ArticleDetail = () => {
 
           <div className="p-6 md:p-8 lg:p-12">
             <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
-              <div className="max-w-4xl">
+              <div className="w-full">
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
                   {article.title}
                 </h1>
@@ -164,7 +168,7 @@ const ArticleDetail = () => {
               </div>
             )}
 
-            <div className="max-w-4xl">
+            <div className="w-full">
               {article.content?.body?.map((paragraph, index) => (
                 <motion.p
                   key={index}
