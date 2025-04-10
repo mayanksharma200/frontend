@@ -184,7 +184,7 @@ if (loading) {
 
             <div className="mt-16 w-full bg-gray-700/30 rounded-xl p-8 border border-gray-600">
               <h3 className="text-2xl font-bold text-white mb-3">
-                HEALTHLINE NEWSLETTER
+                FITNESS CLUB NEWSLETTER
               </h3>
               <h4 className="text-xl text-purple-400 mb-4">
                 Get our Anxiety & Depression newsletter
