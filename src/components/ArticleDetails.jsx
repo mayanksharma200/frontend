@@ -1,50 +1,75 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ArticleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const articles = {
-      "microbreaks-health": {
-        title: "I Work from Home — How Microbreaks Improved My Health",
-        content: {
-          summary: [
-            {
-              title: "What are microbreaks?",
-              text: "Short breaks lasting up to 5 minutes every 20-30 minutes",
-            },
-            {
-              title: "Benefits",
-              text: "Physical and mental health improvements",
-            },
-            { title: "Downsides", text: "Can disrupt flow if not timed well" },
-            { title: "Tips", text: "Set reminders, stretch, hydrate" },
-          ],
-          body: [
-            "When I made the switch to working from home full-time several years ago, I relished the newfound freedoms that remote work offered me. But it didn't take long to realize that I wasn't really taking advantage of them. For the most part, I was still sitting at my desk for most of the day.",
-            "And I wasn't alone in this. A 2022 study showed that working from home tends to lead to more sedentary behavior than office work. The lack of natural movement like walking to meetings or the break room means we have to be more intentional about our activity.",
-            "I decided to try incorporating microbreaks into my routine after reading about their potential benefits. At first, it felt counterintuitive to step away from my work so frequently, but within a week I noticed significant improvements in my focus and energy levels.",
-          ],
-        },
-        meta: {
-          author: "A. L. Heywood",
-          date: "March 31, 2025",
-          reviewer: "Tiffany Taft, PsyD",
-          readTime: "5 min read",
-        },
-        image:
-          "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      },
+    const fetchArticle = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://fitness-backend-api.vercel.app/api/posts/${id}`
+        );
+
+        if (!response.data) {
+          throw new Error("Article data is empty");
+        }
+
+        setArticle(response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching article:", err);
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Failed to load article. Please try again later."
+        );
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setArticle(articles[id]);
+    fetchArticle();
   }, [id]);
 
-  if (!article) return <div className="min-h-screen bg-gray-900"></div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Loading article...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-red-400 max-w-md text-center">
+          {error}
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 text-purple-400 hover:text-purple-300"
+          >
+            Try again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!article) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Article not found</div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -53,12 +78,11 @@ const ArticleDetail = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Left-aligned container with max-w-7xl */}
-      <div className="max-w-7xl ml-4 py-12 px-4 sm:px-6 lg:pl-12 xl:pl-24">
-        {/* Back button */}
+      {/* Changed mx-auto to ml-0 to align left */}
+      <div className="max-w-4/5 max-h-full ml-0 md:ml-15 px-4 sm:px-6 lg:px-8 py-12 w-full">
         <motion.button
           onClick={() => navigate(-1)}
-          className="flex items-center text-purple-400 mb-8"
+          className="flex items-center text-purple-400 mb-8 hover:text-purple-300 transition-colors"
           whileHover={{ x: -5 }}
         >
           <svg
@@ -76,61 +100,72 @@ const ArticleDetail = () => {
           Back to Articles
         </motion.button>
 
-        {/* Full-width article content */}
         <motion.article
           className="bg-gray-800 rounded-xl shadow-2xl overflow-hidden"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Full-width image */}
-          <div className="h-100 w-full overflow-hidden">
-            <img
-              src={article.image}
-              alt={article.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {article.image && (
+            <div className="h-64 md:h-80 w-full overflow-hidden">
+              <img
+                src={article.image}
+                alt={article.title}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/800x400?text=Image+Not+Available";
+                }}
+              />
+            </div>
+          )}
 
-          {/* Content area - full width but text doesn't span full width */}
           <div className="p-6 md:p-8 lg:p-12">
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
               <div className="max-w-4xl">
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
                   {article.title}
                 </h1>
                 <div className="flex flex-wrap items-center text-gray-400 text-sm gap-2">
-                  <span>Medically reviewed by {article.meta.reviewer}</span>
-                  <span>•</span>
+                  {article.meta?.reviewer && (
+                    <>
+                      <span>Medically reviewed by {article.meta.reviewer}</span>
+                      <span>•</span>
+                    </>
+                  )}
                   <span>
-                    Written by {article.meta.author} on {article.meta.date}
+                    Written by {article.meta?.author || "Unknown author"} on{" "}
+                    {article.meta?.date || "unknown date"}
                   </span>
                 </div>
               </div>
-              <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-3 py-2 rounded-full">
-                {article.meta.readTime}
-              </span>
+              {article.meta?.readTime && (
+                <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-3 py-2 rounded-full">
+                  {article.meta.readTime}
+                </span>
+              )}
             </div>
 
-            {/* Summary boxes - full width */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 w-full">
-              {article.content.summary.map((item, index) => (
-                <motion.div
-                  key={index}
-                  className="bg-gray-700/50 p-4 rounded-lg"
-                  whileHover={{ y: -3 }}
-                >
-                  <h3 className="text-purple-400 text-sm font-bold mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-300 text-sm">{item.text}</p>
-                </motion.div>
-              ))}
-            </div>
+            {article.content?.summary && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 w-full">
+                {article.content.summary.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-gray-700/50 p-4 rounded-lg"
+                    whileHover={{ y: -3 }}
+                  >
+                    <h3 className="text-purple-400 text-sm font-bold mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-300 text-sm">{item.text}</p>
+                  </motion.div>
+                ))}
+              </div>
+            )}
 
-            {/* Article body - constrained text width for readability */}
             <div className="max-w-4xl">
-              {article.content.body.map((paragraph, index) => (
+              {article.content?.body?.map((paragraph, index) => (
                 <motion.p
                   key={index}
                   className="text-gray-300 mb-6 text-lg leading-relaxed"
@@ -143,7 +178,6 @@ const ArticleDetail = () => {
               ))}
             </div>
 
-            {/* Newsletter signup - full width */}
             <div className="mt-16 w-full bg-gray-700/30 rounded-xl p-8 border border-gray-600">
               <h3 className="text-2xl font-bold text-white mb-3">
                 HEALTHLINE NEWSLETTER
