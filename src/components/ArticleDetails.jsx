@@ -143,7 +143,7 @@ const ArticleDetail = () => {
                 </div>
               </div>
               {article.meta?.readTime && (
-                <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-3 py-2 rounded-full md:min-w-[90px]">
+                <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-3 py-2 rounded-full md:min-w-[100px]">
                   {article.meta.readTime}
                 </span>
               )}
