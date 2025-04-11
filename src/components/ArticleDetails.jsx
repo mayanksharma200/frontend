@@ -39,17 +39,16 @@ const ArticleDetail = () => {
     fetchArticle();
   }, [id]);
 
-if (loading) {
-  return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-400 mb-4"></div>
-      <p className="text-gray-300">
-        {error ? "Retrying..." : "Loading content..."}
-      </p>
-    </div>
-  );
-}
-
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-400 mb-4"></div>
+        <p className="text-gray-300">
+          {error ? "Retrying..." : "Loading content..."}
+        </p>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -82,7 +81,6 @@ if (loading) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Updated container with full width on mobile and proper responsive behavior */}
       <div className="w-full px-4 py-12 md:ml-15 md:max-w-[78%] lg:px-8 mx-auto">
         <motion.button
           onClick={() => navigate(-1)}
@@ -145,7 +143,7 @@ if (loading) {
                 </div>
               </div>
               {article.meta?.readTime && (
-                <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-3 py-2 rounded-full">
+                <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-3 py-2 rounded-full md:min-w-[90px]">
                   {article.meta.readTime}
                 </span>
               )}
@@ -169,18 +167,50 @@ if (loading) {
             )}
 
             <div className="w-full">
-              {article.content?.body?.map((paragraph, index) => (
-                <motion.p
+              {article.content?.body?.map((section, index) => (
+                <motion.div
                   key={index}
-                  className="text-gray-300 mb-6 text-lg leading-relaxed"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  className="mb-12"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + index * 0.1 }}
                 >
-                  {paragraph}
-                </motion.p>
+                  <h2 className="text-2xl font-bold text-white mb-4">
+                    {section.headline}
+                  </h2>
+                  <p className="text-gray-300 text-lg leading-relaxed">
+                    {section.content}
+                  </p>
+                </motion.div>
               ))}
             </div>
+
+            {article.related_studies && article.related_studies.length > 0 && (
+              <div className="mt-12">
+                <h3 className="text-xl font-bold text-white mb-4">
+                  Related Studies
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {article.related_studies.map((study, index) => (
+                    <motion.div
+                      key={index}
+                      className="bg-gray-700/30 p-4 rounded-lg border border-gray-600"
+                      whileHover={{ y: -3 }}
+                    >
+                      <h4 className="text-purple-400 font-medium mb-2">
+                        {study.title}
+                      </h4>
+                      <a
+                        href={study.link}
+                        className="text-gray-300 hover:text-purple-400 text-sm"
+                      >
+                        Read more →
+                      </a>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mt-16 w-full bg-gray-700/30 rounded-xl p-8 border border-gray-600">
               <h3 className="text-2xl font-bold text-white mb-3">
