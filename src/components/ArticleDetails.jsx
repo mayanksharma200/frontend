@@ -39,6 +39,57 @@ const ArticleDetail = () => {
     fetchArticle();
   }, [id]);
 
+  // Function to check if a link is internal
+  const isInternalLink = (link) => {
+    const internalPatterns = [
+      /^https:\/\/fitnessclub121\.vercel\.app\/article\/[a-z0-9]+$/i,
+      /^http:\/\/localhost:5173\/article\/[a-z0-9]+$/i,
+      /^\/article\/[a-z0-9]+$/i,
+    ];
+    return internalPatterns.some((pattern) => pattern.test(link));
+  };
+
+  // Function to extract article ID from internal link
+  const extractArticleId = (link) => {
+    return link.split("/").pop();
+  };
+
+  // Function to render content with hyperlinks
+  const renderContentWithHyperlinks = (content, hyperlinks) => {
+    if (!hyperlinks || hyperlinks.length === 0) return content;
+
+    let processedContent = content;
+    hyperlinks.forEach((hyperlink) => {
+      const regex = new RegExp(`\\b${hyperlink.keyword}\\b`, "gi");
+      processedContent = processedContent.replace(regex, (match) => {
+        if (isInternalLink(hyperlink.link)) {
+          const articleId = extractArticleId(hyperlink.link);
+          return `<a href="/article/${articleId}" class="text-purple-400 hover:text-purple-300 cursor-pointer" data-internal-link="${articleId}">${match}</a>`;
+        } else {
+          return `<a href="${hyperlink.link}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300">${match}</a>`;
+        }
+      });
+    });
+    return processedContent;
+  };
+
+  // Handle clicks on dynamically generated links
+  useEffect(() => {
+    const handleClick = (e) => {
+      const internalLink = e.target.closest("[data-internal-link]");
+      if (internalLink) {
+        e.preventDefault();
+        const articleId = internalLink.getAttribute("data-internal-link");
+        navigate(`/article/${articleId}`);
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [navigate]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center">
@@ -178,9 +229,15 @@ const ArticleDetail = () => {
                   <h2 className="text-2xl font-bold text-white mb-4">
                     {section.headline}
                   </h2>
-                  <p className="text-gray-300 text-lg leading-relaxed">
-                    {section.content}
-                  </p>
+                  <p
+                    className="text-gray-300 text-lg leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: renderContentWithHyperlinks(
+                        section.content,
+                        section.hyperlinks
+                      ),
+                    }}
+                  />
                 </motion.div>
               ))}
             </div>
@@ -191,23 +248,40 @@ const ArticleDetail = () => {
                   Related Studies
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {article.related_studies.map((study, index) => (
-                    <motion.div
-                      key={index}
-                      className="bg-gray-700/30 p-4 rounded-lg border border-gray-600"
-                      whileHover={{ y: -3 }}
-                    >
-                      <h4 className="text-purple-400 font-medium mb-2">
-                        {study.title}
-                      </h4>
-                      <a
-                        href={study.link}
-                        className="text-gray-300 hover:text-purple-400 text-sm"
+                  {article.related_studies.map((study, index) => {
+                    const isInternal = isInternalLink(study.link);
+                    return (
+                      <motion.div
+                        key={index}
+                        className="bg-gray-700/30 p-4 rounded-lg border border-gray-600"
+                        whileHover={{ y: -3 }}
                       >
-                        Read more →
-                      </a>
-                    </motion.div>
-                  ))}
+                        <h4 className="text-purple-400 font-medium mb-2">
+                          {study.title}
+                        </h4>
+                        {isInternal ? (
+                          <button
+                            onClick={() => {
+                              const articleId = extractArticleId(study.link);
+                              navigate(`/article/${articleId}`);
+                            }}
+                            className="text-gray-300 hover:text-purple-400 text-sm"
+                          >
+                            Read more →
+                          </button>
+                        ) : (
+                          <a
+                            href={study.link}
+                            className="text-gray-300 hover:text-purple-400 text-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Read more →
+                          </a>
+                        )}
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
             )}

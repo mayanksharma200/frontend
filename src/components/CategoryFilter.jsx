@@ -1,35 +1,50 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const CategoryFilter = () => {
+  const navigate = useNavigate();
   const categories = [
     {
       name: "Nutrition",
       image: "/apple.webp",
+      link: "/nutrition",
     },
     {
       name: "Sleep",
       image: "/sleep.webp",
+      link: "/sleep",
     },
     {
       name: "Mental Health",
       image: "/mentalhealth.webp",
+      link: "/mental-health",
     },
     {
       name: "Fitness",
       image: "/fitness.webp",
+      link: "/fitness",
     },
     {
       name: "Product Reviews",
       image: "/productreviews.webp",
+      link: "/product-reviews",
     },
     {
       name: "VIEW ALL",
       image: "/view4.png",
-    }
+      link: "/all-categories",
+    },
   ];
 
   const [activeCategory, setActiveCategory] = React.useState("VIEW ALL");
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category.name);
+    if (category.link) {
+      navigate(category.link);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -49,12 +64,13 @@ const CategoryFilter = () => {
           {categories.map((category) => (
             <motion.div
               key={category.name}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
+              onClick={() => handleCategoryClick(category)}
             >
               {/* Image Container */}
               <div
@@ -63,7 +79,6 @@ const CategoryFilter = () => {
                     ? "bg-purple-100 border-2 border-purple-600"
                     : "bg-gray-100 border-2 border-transparent"
                 }`}
-                onClick={() => setActiveCategory(category.name)}
               >
                 <img
                   src={category.image}
@@ -76,16 +91,15 @@ const CategoryFilter = () => {
               </div>
 
               {/* Category Name */}
-              <button
+              <span
                 className={`text-sm md:text-base font-medium ${
                   activeCategory === category.name
                     ? "text-purple-600 font-semibold"
                     : "text-white-700"
                 }`}
-                onClick={() => setActiveCategory(category.name)}
               >
                 {category.name}
-              </button>
+              </span>
             </motion.div>
           ))}
         </div>

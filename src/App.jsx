@@ -53,7 +53,15 @@ const App = () => {
           {/* Article detail page */}
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/nutrition" element={<NutritionTop />} />
+          <Route
+            path="/nutrition"
+            element={
+              <>
+                <NutritionTop />
+                <WellnessFooter />
+              </>
+            }
+          />
         </Routes>
         <ToastContainer theme="dark" position="top-center" />
       </div>

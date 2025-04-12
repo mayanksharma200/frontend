@@ -31,6 +31,10 @@ const ArticlesGrid = () => {
     fetchArticles();
   }, []);
 
+  useEffect(() => {
+    console.log(articles, "article grid");
+  }, [articles]);
+
   // Animation variants
   const container = {
     hidden: { opacity: 0 },
@@ -73,8 +77,17 @@ const ArticlesGrid = () => {
     },
   };
 
-  const handleArticleClick = (articleId) => {
-    navigate(`/article/${articleId}`);
+  const handleArticleClick = (articleId, articleLink) => {
+    if (articleLink) {
+      // Check if it's a relative path (doesn't start with http)
+      if (!articleLink.startsWith("http")) {
+        navigate(articleLink); // Use internal navigation
+      } else {
+        window.location.href = articleLink; // Full page load for external links
+      }
+    } else {
+      navigate(`/article/${articleId}`);
+    }
   };
 
   if (loading) {
@@ -155,7 +168,7 @@ const ArticlesGrid = () => {
                 whileHover={{
                   boxShadow: "0 20px 40px -10px rgba(168, 85, 247, 0.25)",
                 }}
-                onClick={() => handleArticleClick(article._id)}
+                onClick={() => handleArticleClick(article._id, article.link)}
               >
                 {/* Image */}
                 <motion.div
@@ -212,10 +225,10 @@ const ArticlesGrid = () => {
                       transition={{ type: "spring", stiffness: 400 }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleArticleClick(article._id);
+                        handleArticleClick(article._id, article.link);
                       }}
                     >
-                      Read Full Article
+                      {article.link ? "Read Full Article" : "Read Full Article"}
                     </motion.button>
                   </div>
                 </div>
