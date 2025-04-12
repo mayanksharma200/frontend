@@ -145,7 +145,6 @@ const ArticlesGrid = () => {
           {articles.map((article, index) => (
             <motion.div
               key={article._id}
-              variants={index % 2 === 0 ? itemLeft : itemRight}
               whileHover={{
                 y: -6,
                 transition: { type: "spring", stiffness: 300, damping: 10 },

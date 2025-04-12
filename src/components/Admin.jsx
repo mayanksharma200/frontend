@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import CustomDatePicker from "./CustomDatePicker"
 
 const Admin = () => {
   const [posts, setPosts] = useState([]);
@@ -231,7 +232,7 @@ const handleResetForm = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Post Management</h1>
+      <h1 className="text-3xl font-bold text-purple-500 mb-6">Post Management</h1>
 
       {error && (
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
@@ -239,15 +240,21 @@ const handleResetForm = () => {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-4 mb-6 text-white-100">
         <select
           className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={searchField}
           onChange={(e) => setSearchField(e.target.value)}
         >
-          <option value="title">Search by Title</option>
-          <option value="position">Search by Position</option>
-          <option value="id">Search by ID</option>
+          <option className="text-gray-800" value="title">
+            Search by Title
+          </option>
+          <option className="text-gray-800" value="position">
+            Search by Position
+          </option>
+          <option className="text-gray-800" value="id">
+            Search by ID
+          </option>
         </select>
 
         <input
@@ -382,12 +389,10 @@ const handleResetForm = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Date
                   </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                    value={formData.meta.date || ""}
-                    onChange={(e) =>
-                      handleNestedInputChange("meta", "date", e.target.value)
+                  <CustomDatePicker
+                    value={formData.meta.date}
+                    onChange={(date) =>
+                      handleNestedInputChange("meta", "date", date)
                     }
                   />
                 </div>
