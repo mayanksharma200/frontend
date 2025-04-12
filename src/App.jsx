@@ -16,6 +16,7 @@ import SpotlightSection from "./components/Spotlightsection";
 import SponsoredTopics from "./components/SponsoredTopics";
 import WellnessFooter from "./components/WellnessFooter";
 import Admin from "./components/Admin";
+import NutritionTop from "./components/NutritionTop";
 
 const App = () => {
   return (
@@ -52,6 +53,7 @@ const App = () => {
           {/* Article detail page */}
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/nutrition" element={<NutritionTop />} />
         </Routes>
         <ToastContainer theme="dark" position="top-center" />
       </div>

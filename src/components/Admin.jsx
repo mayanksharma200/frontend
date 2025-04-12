@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CustomDatePicker from "./CustomDatePicker"
+import CustomDatePicker from "./CustomDatePicker";
 
 const Admin = () => {
   const [posts, setPosts] = useState([]);
@@ -9,11 +9,17 @@ const Admin = () => {
 const [formData, setFormData] = useState({
   title: "",
   position: "",
+  link: "",
   content: {
     summary: [],
     body: [],
   },
-  meta: {},
+  meta: {
+    author: "",
+    date: "",
+    reviewer: "",
+    readTime: "",
+  },
   image: "",
   related_studies: [],
 });
@@ -43,29 +49,33 @@ const [formData, setFormData] = useState({
     }
   }, [searchTerm, searchField, posts]);
 
-const fetchPosts = async () => {
-  setIsLoading(true);
-  try {
-    const response = await axios.get("https://fitness-backend-api.vercel.app/api/posts");
-    // Normalize the data to ensure content structure exists
-    const normalizedPosts = response.data.map((post) => ({
-      ...post,
-      content: {
-        summary: post.content?.summary || [],
-        body: post.content?.body || [],
-        ...post.content,
-      },
-    }));
-    setPosts(normalizedPosts);
-    setFilteredPosts(normalizedPosts);
-    setError("");
-  } catch (err) {
-    setError("Failed to fetch posts");
-    console.error(err);
-  } finally {
-    setIsLoading(false);
-  }
-};
+//   useEffect(() => {
+//     console.log("Form data updated:", formData);
+//   }, [formData]);
+
+  const fetchPosts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get("https://fitness-backend-api.vercel.app/api/posts");
+      // Normalize the data to ensure content structure exists
+      const normalizedPosts = response.data.map((post) => ({
+        ...post,
+        content: {
+          summary: post.content?.summary || [],
+          body: post.content?.body || [],
+          ...post.content,
+        },
+      }));
+      setPosts(normalizedPosts);
+      setFilteredPosts(normalizedPosts);
+      setError("");
+    } catch (err) {
+      setError("Failed to fetch posts");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchTopArticles = async () => {
     setIsLoading(true);
@@ -86,15 +96,38 @@ const fetchPosts = async () => {
 const handleSelectPost = (post) => {
   setSelectedPost(post);
   setFormData({
-    title: post.title,
-    position: post.position,
+    title: post.title || "",
+    position: post.position || "",
+    link: post.link || "",
     content: {
-      summary: post.content?.summary || [],
-      body: post.content?.body || [],
+      summary:
+        post.content?.summary?.map((item) => ({
+          title: item.title || "",
+          text: item.text || "",
+        })) || [],
+      body:
+        post.content?.body?.map((item) => ({
+          headline: item.headline || "",
+          content: item.content || "",
+          hyperlinks:
+            item.hyperlinks?.map((link) => ({
+              keyword: link.keyword || "",
+              link: link.link || "",
+            })) || [],
+        })) || [],
     },
-    meta: post.meta || {},
+    meta: {
+      author: post.meta?.author || "",
+      date: post.meta?.date || "",
+      reviewer: post.meta?.reviewer || "",
+      readTime: post.meta?.readTime || "",
+    },
     image: post.image || "",
-    related_studies: post.related_studies || [],
+    related_studies:
+      post.related_studies?.map((study) => ({
+        title: study.title || "",
+        link: study.link || "",
+      })) || [],
   });
 };
 
@@ -119,12 +152,72 @@ const handleSelectPost = (post) => {
   // Update the array item handlers to work with nested content
   const handleArrayItemChange = (arrayName, index, field, value) => {
     setFormData((prev) => {
+      // Handle content arrays (summary, body) differently from related_studies
+      if (arrayName === "summary" || arrayName === "body") {
+        const newContent = { ...prev.content };
+        newContent[arrayName] = [...newContent[arrayName]];
+        newContent[arrayName][index] = {
+          ...newContent[arrayName][index],
+          [field]: value,
+        };
+        return {
+          ...prev,
+          content: newContent,
+        };
+      } else {
+        // Handle related_studies array
+        const newRelatedStudies = [...prev.related_studies];
+        newRelatedStudies[index] = {
+          ...newRelatedStudies[index],
+          [field]: value,
+        };
+        return {
+          ...prev,
+          related_studies: newRelatedStudies,
+        };
+      }
+    });
+  };
+
+  const handleAddArrayItem = (arrayName, template) => {
+    setFormData((prev) => {
+      if (arrayName === "summary" || arrayName === "body") {
+        const newContent = { ...prev.content };
+        newContent[arrayName] = [...newContent[arrayName], template];
+        return {
+          ...prev,
+          content: newContent,
+        };
+      } else {
+        return {
+          ...prev,
+          [arrayName]: [...prev[arrayName], template],
+        };
+      }
+    });
+  };
+
+  // New handler for hyperlinks
+  const handleHyperlinkChange = (bodyIndex, hyperlinkIndex, field, value) => {
+    setFormData((prev) => {
       const newContent = { ...prev.content };
-      newContent[arrayName] = [...newContent[arrayName]];
-      newContent[arrayName][index] = {
-        ...newContent[arrayName][index],
-        [field]: value,
+      newContent.body = [...newContent.body];
+      newContent.body[bodyIndex] = {
+        ...newContent.body[bodyIndex],
+        hyperlinks: [...(newContent.body[bodyIndex].hyperlinks || [])],
       };
+
+      if (hyperlinkIndex === -1) {
+        // Add new hyperlink
+        newContent.body[bodyIndex].hyperlinks.push({ [field]: value });
+      } else {
+        // Update existing hyperlink
+        newContent.body[bodyIndex].hyperlinks[hyperlinkIndex] = {
+          ...newContent.body[bodyIndex].hyperlinks[hyperlinkIndex],
+          [field]: value,
+        };
+      }
+
       return {
         ...prev,
         content: newContent,
@@ -132,26 +225,43 @@ const handleSelectPost = (post) => {
     });
   };
 
-const handleAddArrayItem = (arrayName, template) => {
-  setFormData((prev) => {
-    const newContent = { ...prev.content };
-    newContent[arrayName] = [...newContent[arrayName], template]; // Fixed the comma issue
-    return {
-      ...prev,
-      content: newContent,
-    };
-  });
-};
-const handleRemoveArrayItem = (arrayName, index) => {
-  setFormData((prev) => {
-    const newContent = { ...prev.content };
-    newContent[arrayName] = newContent[arrayName].filter((_, i) => i !== index);
-    return {
-      ...prev,
-      content: newContent,
-    };
-  });
-};
+  const handleRemoveHyperlink = (bodyIndex, hyperlinkIndex) => {
+    setFormData((prev) => {
+      const newContent = { ...prev.content };
+      newContent.body = [...newContent.body];
+      newContent.body[bodyIndex] = {
+        ...newContent.body[bodyIndex],
+        hyperlinks: newContent.body[bodyIndex].hyperlinks.filter(
+          (_, i) => i !== hyperlinkIndex
+        ),
+      };
+
+      return {
+        ...prev,
+        content: newContent,
+      };
+    });
+  };
+
+  const handleRemoveArrayItem = (arrayName, index) => {
+    setFormData((prev) => {
+      if (arrayName === "summary" || arrayName === "body") {
+        const newContent = { ...prev.content };
+        newContent[arrayName] = newContent[arrayName].filter(
+          (_, i) => i !== index
+        );
+        return {
+          ...prev,
+          content: newContent,
+        };
+      } else {
+        return {
+          ...prev,
+          [arrayName]: prev[arrayName].filter((_, i) => i !== index),
+        };
+      }
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -163,13 +273,17 @@ const handleRemoveArrayItem = (arrayName, index) => {
           formData
         );
       } else {
-        await axios.post("https://fitness-backend-api.vercel.app/api/posts", formData);
+        await axios.post(
+          "https://fitness-backend-api.vercel.app/api/posts",
+          formData
+        );
       }
       fetchPosts();
       setSelectedPost(null);
       setFormData({
         title: "",
         position: "",
+        link:"",
         content: {},
         summary: [],
         body: [],
@@ -191,7 +305,9 @@ const handleRemoveArrayItem = (arrayName, index) => {
 
     setIsLoading(true);
     try {
-      await axios.delete(`https://fitness-backend-api.vercel.app/api/posts/${id}`);
+      await axios.delete(
+        `https://fitness-backend-api.vercel.app/api/posts/${id}`
+      );
       fetchPosts();
       if (selectedPost && selectedPost._id === id) {
         setSelectedPost(null);
@@ -220,11 +336,17 @@ const handleResetForm = () => {
   setFormData({
     title: "",
     position: "",
+    link: "",
     content: {
       summary: [],
       body: [],
     },
-    meta: {},
+    meta: {
+      author: "",
+      date: "",
+      reviewer: "",
+      readTime: "",
+    },
     image: "",
     related_studies: [],
   });
@@ -232,7 +354,9 @@ const handleResetForm = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <h1 className="text-3xl font-bold text-purple-500 mb-6">Post Management</h1>
+      <h1 className="text-3xl font-bold text-purple-500 mb-6">
+        Post Management
+      </h1>
 
       {error && (
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
@@ -331,7 +455,7 @@ const handleResetForm = () => {
                 <input
                   type="text"
                   name="title"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500   text-gray-900"
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   value={formData.title}
                   onChange={handleInputChange}
                   required
@@ -351,6 +475,20 @@ const handleResetForm = () => {
                   placeholder="e.g., TopTwoArticles"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Direct Link
+              </label>
+              <input
+                type="text"
+                name="link"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                value={formData.link}
+                onChange={handleInputChange}
+                placeholder="e.g., /healthy-eating"
+              />
             </div>
 
             <div>
@@ -513,7 +651,11 @@ const handleResetForm = () => {
                   type="button"
                   className="px-3 py-1 bg-green-500 text-white rounded-md text-sm hover:bg-green-600"
                   onClick={() =>
-                    handleAddArrayItem("body", { headline: "", content: "" })
+                    handleAddArrayItem("body", {
+                      headline: "",
+                      content: "",
+                      hyperlinks: [],
+                    })
                   }
                 >
                   Add Body Item
@@ -551,7 +693,7 @@ const handleResetForm = () => {
                       </button>
                     </div>
                   </div>
-                  <div>
+                  <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Content
                     </label>
@@ -568,6 +710,81 @@ const handleResetForm = () => {
                         )
                       }
                     />
+                  </div>
+
+                  {/* Hyperlinks section */}
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-md font-medium text-gray-700">
+                        Hyperlinks
+                      </h4>
+                      <button
+                        type="button"
+                        className="px-2 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600"
+                        onClick={() =>
+                          handleHyperlinkChange(index, -1, "keyword", "")
+                        }
+                      >
+                        Add Hyperlink
+                      </button>
+                    </div>
+
+                    {item.hyperlinks?.map((hyperlink, hIndex) => (
+                      <div
+                        key={hIndex}
+                        className="bg-gray-100 p-3 rounded mb-2"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Keyword
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full px-2 py-1 border rounded text-sm text-black"
+                              value={hyperlink.keyword || ""}
+                              onChange={(e) =>
+                                handleHyperlinkChange(
+                                  index,
+                                  hIndex,
+                                  "keyword",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Link URL
+                            </label>
+                            <div className="flex">
+                              <input
+                                type="text"
+                                className="flex-grow px-2 py-1 border rounded text-sm text-black"
+                                value={hyperlink.link || ""}
+                                onChange={(e) =>
+                                  handleHyperlinkChange(
+                                    index,
+                                    hIndex,
+                                    "link",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <button
+                                type="button"
+                                className="ml-2 px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600"
+                                onClick={() =>
+                                  handleRemoveHyperlink(index, hIndex)
+                                }
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}

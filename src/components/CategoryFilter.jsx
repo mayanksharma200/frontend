@@ -4,10 +4,6 @@ import { motion } from "framer-motion";
 const CategoryFilter = () => {
   const categories = [
     {
-      name: "VIEW ALL",
-      image: "/view4.png",
-    },
-    {
       name: "Nutrition",
       image: "/apple.webp",
     },
@@ -27,6 +23,10 @@ const CategoryFilter = () => {
       name: "Product Reviews",
       image: "/productreviews.webp",
     },
+    {
+      name: "VIEW ALL",
+      image: "/view4.png",
+    }
   ];
 
   const [activeCategory, setActiveCategory] = React.useState("VIEW ALL");
