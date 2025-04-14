@@ -1,40 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const LatestArticles = () => {
-  const articles = [
-    {
-      id: "cold-shower-benefits",
-      title: "Cold Shower Benefits for Your Health",
-      excerpt: "You'll want the water to be below a certain temperature.",
-      readTime: "3 min read",
-      image: "/shower.png",
-    },
-    {
-      id: "healthy-dinner-recipes",
-      title: "5 Healthy Dinner Recipes in 15 Minutes or Less",
-      excerpt: "Cook, eat, and move on with the rest of your evening.",
-      readTime: "4 min read",
-      image: "/foodrecipe.jpg",
-    },
-    {
-      id: "mouth-taping-experiment",
-      title: "We Tried It: My 5-Night Experiment With Mouth Taping",
-      excerpt:
-        "Mouth taping isn't suitable for everyone — just ask this Healthline editor.",
-      readTime: "6 min read",
-      image: "/sleep.jpg",
-    },
-    {
-      id: "tuberculosis-warning",
-      title:
-        "WHO Warns of Rising Tuberculosis Cases Amid Cuts to Funding From US",
-      excerpt:
-        "Experts say the European situation should concern people in the U.S.",
-      readTime: "5 min read",
-      image: "/doctor.png",
-    },
-  ];
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch(
+          "https://fitness-backend-api.vercel.app/api/posts/top-nutrition"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch articles");
+        }
+        const data = await response.json();
+        setArticles(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  const handleArticleClick = (articleId, articleLink) => {
+    if (articleLink) {
+      if (!articleLink.startsWith("http")) {
+        navigate(articleLink, { state: { from: location.pathname } });
+      } else {
+        window.location.href = articleLink;
+      }
+    } else {
+      navigate(`/article/${articleId}`, { state: { from: location.pathname } });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-800"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded text-center">
+        Error: {error}
+      </div>
+    );
+  }
+
+  if (!articles.length) {
+    return (
+      <div className="text-center text-gray-400 py-8">
+        No articles available
+      </div>
+    );
+  }
 
   return (
     <section className="py-12 px-4 sm:px-6 bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -56,12 +86,13 @@ const LatestArticles = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {articles.map((article, index) => (
             <motion.article
-              key={article.id}
-              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex h-[120px] sm:h-[150px]"
+              key={article._id}
+              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex h-[120px] sm:h-[150px] cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
+              onClick={() => handleArticleClick(article._id, article.link)}
             >
               {/* Small Image on Left - Responsive sizing */}
               <div className="w-[100px] sm:w-[120px] h-full overflow-hidden flex-shrink-0">
@@ -79,13 +110,19 @@ const LatestArticles = () => {
                   {article.title}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-2 sm:mb-3 line-clamp-2">
-                  {article.excerpt}
+                  {article.content?.summary?.[0]?.text || article.excerpt}
                 </p>
                 <div className="mt-auto flex justify-between items-center">
                   <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
-                    {article.readTime}
+                    {article.meta?.readTime || "3 min read"}
                   </span>
-                  <button className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium transition-colors">
+                  <button
+                    className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleArticleClick(article._id, article.link);
+                    }}
+                  >
                     Read More →
                   </button>
                 </div>

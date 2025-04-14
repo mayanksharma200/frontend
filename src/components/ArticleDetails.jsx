@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const ArticleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Track the previous path for back navigation
+  const fromPath = location.state?.from || "/";
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -64,7 +68,7 @@ const ArticleDetail = () => {
       processedContent = processedContent.replace(regex, (match) => {
         if (isInternalLink(hyperlink.link)) {
           const articleId = extractArticleId(hyperlink.link);
-          return `<a href="/article/${articleId}" class="text-purple-400 hover:text-purple-300 cursor-pointer" data-internal-link="${articleId}">${match}</a>`;
+          return `<a href="/article/${articleId}" class="text-purple-400 hover:text-purple-300 cursor-pointer" data-internal-link="${articleId}" data-from-path="${fromPath}">${match}</a>`;
         } else {
           return `<a href="${hyperlink.link}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300">${match}</a>`;
         }
@@ -80,7 +84,11 @@ const ArticleDetail = () => {
       if (internalLink) {
         e.preventDefault();
         const articleId = internalLink.getAttribute("data-internal-link");
-        navigate(`/article/${articleId}`);
+        const originalFromPath =
+          internalLink.getAttribute("data-from-path") || fromPath;
+        navigate(`/article/${articleId}`, {
+          state: { from: originalFromPath },
+        });
       }
     };
 
@@ -88,7 +96,12 @@ const ArticleDetail = () => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [navigate]);
+  }, [navigate, fromPath]);
+
+  // Enhanced back button handler
+  const handleBackClick = () => {
+    navigate(fromPath);
+  };
 
   if (loading) {
     return (
@@ -134,7 +147,7 @@ const ArticleDetail = () => {
     >
       <div className="w-full px-4 py-12 md:ml-15 md:max-w-[78%] lg:px-8 mx-auto">
         <motion.button
-          onClick={() => navigate(-1)}
+          onClick={handleBackClick}
           className="flex items-center text-purple-400 mb-8 hover:text-purple-300 transition-colors"
           whileHover={{ x: -5 }}
         >
@@ -150,7 +163,12 @@ const ArticleDetail = () => {
               clipRule="evenodd"
             />
           </svg>
-          Back to Articles
+          Back to{" "}
+          {fromPath === "/"
+            ? "Home"
+            : fromPath.includes("nutrition")
+            ? "Nutrition"
+            : "Articles"}
         </motion.button>
 
         <motion.article
@@ -263,7 +281,9 @@ const ArticleDetail = () => {
                           <button
                             onClick={() => {
                               const articleId = extractArticleId(study.link);
-                              navigate(`/article/${articleId}`);
+                              navigate(`/article/${articleId}`, {
+                                state: { from: fromPath },
+                              });
                             }}
                             className="text-gray-300 hover:text-purple-400 text-sm"
                           >

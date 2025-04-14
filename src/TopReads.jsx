@@ -1,29 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const TopReads = () => {
-  const articles = [
-    {
-      id: "insurance-therapy",
-      title: "How to Know If Your Insurance Covers Therapy",
-      image: "/insuranceThink.png", // Replace with your image path
-    },
-    {
-      id: "high-cortisol",
-      title: "What Are the Symptoms and Causes of High Cortisol Levels?",
-      image: "/cortison.png",
-    },
-    {
-      id: "comforting-recipes",
-      title: "Comforting Recipes for a Cozy Dinner",
-      image: "/family.png",
-    },
-    {
-      id: "toxic-work",
-      title: "How to Deal With a Toxic Work Environment",
-      image: "/environment.png",
-    },
-  ];
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch(
+          "https://fitness-backend-api.vercel.app/api/posts/top-nutrition"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch articles");
+        }
+        const data = await response.json();
+        setArticles(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  const handleArticleClick = (articleId, articleLink) => {
+    if (articleLink) {
+      if (!articleLink.startsWith("http")) {
+        navigate(articleLink, { state: { from: location.pathname } });
+      } else {
+        window.location.href = articleLink;
+      }
+    } else {
+      navigate(`/article/${articleId}`, { state: { from: location.pathname } });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-800"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded text-center">
+        Error: {error}
+      </div>
+    );
+  }
+
+  if (!articles.length) {
+    return (
+      <div className="text-center text-gray-400 py-8">
+        No articles available
+      </div>
+    );
+  }
 
   return (
     <section className="py-12 px-4 sm:px-6 bg-gray-50 dark:bg-gray-900">
@@ -45,11 +86,12 @@ const TopReads = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {articles.map((article, index) => (
             <motion.article
-              key={article.id}
-              className="group"
+              key={article._id}
+              className="group cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
+              onClick={() => handleArticleClick(article._id, article.link)}
             >
               <div className="h-full flex flex-col">
                 {/* Image with subtle hover effect */}
@@ -71,7 +113,13 @@ const TopReads = () => {
 
                 {/* Read link */}
                 <div className="mt-auto px-2">
-                  <button className="text-purple-600 dark:text-purple-400 font-medium flex items-center group-hover:underline">
+                  <button
+                    className="text-purple-600 dark:text-purple-400 font-medium flex items-center group-hover:underline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleArticleClick(article._id, article.link);
+                    }}
+                  >
                     Read Article
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
