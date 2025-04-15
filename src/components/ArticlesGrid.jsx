@@ -119,7 +119,7 @@ const ArticlesGrid = () => {
     <section className="py-12 px-4 sm:px-6 bg-gray-900 min-h-screen">
       <div className="max-w-6xl mx-auto my-auto">
         {/* Header */}
-        <motion.div
+        {/* <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -146,7 +146,7 @@ const ArticlesGrid = () => {
           >
             Discover wellness tips and research-backed insights
           </motion.p>
-        </motion.div>
+        </motion.div> */}
 
         {/* Articles Grid */}
         <motion.div

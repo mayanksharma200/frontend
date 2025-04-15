@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
-import ScrollToTop from "./ScrollToTop";
+import ScrollToTop from "../ScrollToTop";
 
 const NutritionTop = () => {
   const [articles, setArticles] = useState([]);

@@ -36,7 +36,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <ul className="hidden lg:flex ml-14 space-x-12">
+          {/* <ul className="hidden lg:flex ml-14 space-x-12">
             {navItems.map((item, index) => (
               <li key={index}>
                 <a
@@ -51,7 +51,7 @@ const Navbar = () => {
                 </a>
               </li>
             ))}
-          </ul>
+          </ul> */}
 
           {/* Desktop Buttons */}
           <div className="hidden lg:flex justify-center space-x-12 items-center">

@@ -1,7 +1,12 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
@@ -14,8 +19,10 @@ import SpotlightSection from "./components/Spotlightsection";
 import SponsoredTopics from "./components/SponsoredTopics";
 import WellnessFooter from "./components/WellnessFooter";
 import Admin from "./components/Admin";
-import NutritionTop from "./components/NutritionTop";
-import NutritionMid from "./components/NutritionMid";
+import NutritionTop from "./components/nutrition/NutritionTop";
+import NutritionMid from "./components/nutrition/NutritionMid";
+import SleepTop from "./components/sleep/SleepTop";
+import SleepMid from "./components/sleep/SleepMid";
 
 // ScrollToTop component to handle scroll restoration
 const ScrollToTop = () => {
@@ -39,7 +46,7 @@ const App = () => {
             path="/"
             element={
               <>
-                {/* <Hero /> */}
+                <Hero />
                 <ArticlesGrid />
                 <CategoryFilter />
                 <LatestArticles />
@@ -64,24 +71,72 @@ const App = () => {
 
           {/* Article detail page */}
           <Route path="/article/:id" element={<ArticleDetail />} />
-          
+
           {/* Admin page */}
           <Route path="/admin" element={<Admin />} />
-          
+
           {/* Nutrition page */}
           <Route
             path="/nutrition"
             element={
               <>
                 <NutritionTop />
-                <NutritionMid/>
+                <NutritionMid />
                 <WellnessFooter />
               </>
             }
           />
+
+          {/* Sleep page */}
+          <Route
+            path="/sleep"
+            element={
+              <>
+                <SleepTop />
+                <SleepMid />
+                <WellnessFooter />
+              </>
+            }
+          />
+
+          {/* Mental page */}
+          {/* <Route
+            path="/Mental-health"
+            element={
+              <>
+                <Metal />
+                <NutritionMid />
+                <WellnessFooter />
+              </>
+            }
+          /> */}
+
+          {/* Fitness page */}
+          {/* <Route
+            path="/nutrition"
+            element={
+              <>
+                <NutritionTop />
+                <NutritionMid />
+                <WellnessFooter />
+              </>
+            }
+          /> */}
+
+          {/* Product reviews page */}
+          {/* <Route
+            path="/nutrition"
+            element={
+              <>
+                <NutritionTop />
+                <NutritionMid />
+                <WellnessFooter />
+              </>
+            }
+          /> */}
         </Routes>
-        <ToastContainer 
-          theme="dark" 
+        <ToastContainer
+          theme="dark"
           position="top-center"
           autoClose={5000}
           hideProgressBar={false}
