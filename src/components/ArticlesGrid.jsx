@@ -252,7 +252,7 @@ const ArticlesGrid = () => {
             whileTap={{ scale: 0.97 }}
             className="px-6 py-2 border-2 border-purple-400 text-purple-400 rounded-full font-bold shadow-lg text-base"
             transition={{ type: "spring", stiffness: 400 }}
-            onClick={() => navigate("/articles")}
+            onClick={() => navigate("/all-categories")}
           >
             View All Articles
           </motion.button>

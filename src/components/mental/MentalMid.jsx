@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-const SleepMid = () => {
+const MentalMid = () => {
   const [tips, setTips] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,10 +16,10 @@ const SleepMid = () => {
     const fetchTips = async () => {
       try {
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/sleep-mid"
+          "https://fitness-backend-api.vercel.app/api/posts/mental-mid"
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch sleep tips");
+          throw new Error("Failed to fetch mental tips");
         }
         const data = await response.json();
         setTips(data);
@@ -64,7 +64,7 @@ const SleepMid = () => {
   if (!tips.length) {
     return (
       <div className="text-center text-gray-400 py-8">
-        No sleep tips available
+        No mental tips available
       </div>
     );
   }
@@ -80,7 +80,7 @@ const SleepMid = () => {
           transition={{ duration: 0.4 }}
         >
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-            SLEEP TIPS
+            Mental TIPS
           </h2>
           <div className="w-16 h-1 bg-purple-500 dark:bg-purple-400 mx-auto"></div>
         </motion.div>
@@ -204,4 +204,4 @@ const SleepMid = () => {
   );
 };
 
-export default SleepMid;
+export default MentalMid;

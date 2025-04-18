@@ -23,6 +23,14 @@ import NutritionTop from "./components/nutrition/NutritionTop";
 import NutritionMid from "./components/nutrition/NutritionMid";
 import SleepTop from "./components/sleep/SleepTop";
 import SleepMid from "./components/sleep/SleepMid";
+import MentalTop from "./components/mental/MentalTop";
+import FitnessTop from "./components/fitness/FitnessTop";
+import FitnessMid from "./components/fitness/FitnessMid";
+import ProductTop from "./components/productreviews/ProductTop";
+import ProductMid from "./components/productreviews/ProductMid";
+import ViewAllTop from "./components/viewall/ViewAllTop";
+import ViewAllMid from "./components/viewall/ViewAllMid";
+import MentalMid from "./components/mental/MentalMid";
 
 // ScrollToTop component to handle scroll restoration
 const ScrollToTop = () => {
@@ -100,40 +108,51 @@ const App = () => {
           />
 
           {/* Mental page */}
-          {/* <Route
+          <Route
             path="/Mental-health"
             element={
               <>
-                <Metal />
-                <NutritionMid />
+                <MentalTop />
+                <MentalMid/>
                 <WellnessFooter />
               </>
             }
-          /> */}
+          />
 
           {/* Fitness page */}
-          {/* <Route
-            path="/nutrition"
+          <Route
+            path="/fitness"
             element={
               <>
-                <NutritionTop />
-                <NutritionMid />
+                <FitnessTop />
+                <FitnessMid />
                 <WellnessFooter />
               </>
             }
-          /> */}
+          />
 
           {/* Product reviews page */}
-          {/* <Route
-            path="/nutrition"
+          <Route
+            path="/product-reviews"
             element={
               <>
-                <NutritionTop />
-                <NutritionMid />
+                <ProductTop />
+                <ProductMid />
                 <WellnessFooter />
               </>
             }
-          /> */}
+          />
+          {/* viewall page */}
+          <Route
+            path="/all-categories"
+            element={
+              <>
+                <ViewAllTop />
+                <ViewAllMid />
+                <WellnessFooter />
+              </>
+            }
+          />
         </Routes>
         <ToastContainer
           theme="dark"

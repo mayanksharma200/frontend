@@ -13,7 +13,7 @@ const TopReads = () => {
     const fetchArticles = async () => {
       try {
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/top-nutrition"
+          "https://fitness-backend-api.vercel.app/api/posts/more-top-reads"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch articles");

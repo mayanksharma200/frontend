@@ -13,7 +13,7 @@ const LatestArticles = () => {
     const fetchArticles = async () => {
       try {
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/top-nutrition"
+          "https://fitness-backend-api.vercel.app/api/posts/just-in"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch articles");
@@ -137,6 +137,7 @@ const LatestArticles = () => {
             className="px-6 py-3 border border-purple-600 dark:border-purple-400 text-purple-600 dark:text-purple-400 rounded-md font-medium hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors duration-300"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => navigate("/all-categories")}
           >
             View All Articles
           </motion.button>

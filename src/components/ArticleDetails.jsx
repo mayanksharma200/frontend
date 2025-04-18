@@ -60,10 +60,12 @@ const ArticleDetail = () => {
 
   // Function to render content with hyperlinks
   const renderContentWithHyperlinks = (content, hyperlinks) => {
+    if (!content) return "";
     if (!hyperlinks || hyperlinks.length === 0) return content;
 
     let processedContent = content;
     hyperlinks.forEach((hyperlink) => {
+      if (!hyperlink.keyword || !hyperlink.link) return;
       const regex = new RegExp(`\\b${hyperlink.keyword}\\b`, "gi");
       processedContent = processedContent.replace(regex, (match) => {
         if (isInternalLink(hyperlink.link)) {
@@ -247,8 +249,8 @@ const ArticleDetail = () => {
                   <h2 className="text-2xl font-bold text-white mb-4">
                     {section.headline}
                   </h2>
-                  <p
-                    className="text-gray-300 text-lg leading-relaxed"
+                  <div
+                    className="text-gray-300 text-lg leading-relaxed mb-6"
                     dangerouslySetInnerHTML={{
                       __html: renderContentWithHyperlinks(
                         section.content,
@@ -256,6 +258,27 @@ const ArticleDetail = () => {
                       ),
                     }}
                   />
+
+                  {section.subsections &&
+                    section.subsections.map((subsection, subIndex) => (
+                      <div
+                        key={subIndex}
+                        className="mb-6 pl-4 border-l-2 border-purple-400"
+                      >
+                        <h3 className="text-xl font-semibold text-purple-300 mb-3">
+                          {subsection.subheading}
+                        </h3>
+                        <div
+                          className="text-gray-300 text-lg leading-relaxed"
+                          dangerouslySetInnerHTML={{
+                            __html: renderContentWithHyperlinks(
+                              subsection.content,
+                              section.hyperlinks
+                            ),
+                          }}
+                        />
+                      </div>
+                    ))}
                 </motion.div>
               ))}
             </div>
