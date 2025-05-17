@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const WellnessFooter = () => {
   return (
-    <footer className="bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300">
+    <footer className="bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Main Content Row */}
         <div className="flex flex-col lg:flex-row gap-12 mb-12">
@@ -27,11 +27,11 @@ const WellnessFooter = () => {
                 </label>
                 <input
                   type="email"
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-800"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800"
                 />
               </div>
               <motion.button
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors mt-6 sm:mt-0 sm:self-end"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors mt-6 sm:mt-0 sm:self-end"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -54,7 +54,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     External Links
                   </a>
@@ -62,7 +62,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Contact Us
                   </a>
@@ -70,7 +70,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Privacy Policy
                   </a>
@@ -86,7 +86,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Privacy Settings
                   </a>
@@ -94,7 +94,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Advertising Policy
                   </a>
@@ -102,7 +102,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Health Topics
                   </a>
@@ -118,7 +118,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Sitemap
                   </a>
@@ -126,7 +126,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Medical Affairs
                   </a>
@@ -134,7 +134,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Content Integrity
                   </a>
@@ -150,7 +150,7 @@ const WellnessFooter = () => {
                 <li>
                   <a
                     href="#"
-                    className="text-sm hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Newsletters
                   </a>

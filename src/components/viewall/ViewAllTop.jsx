@@ -3,6 +3,19 @@ import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import ScrollToTop from "../ScrollToTop";
 
+const SkeletonCard = () => (
+  <div className="animate-pulse bg-white rounded-lg shadow-md p-4 flex flex-col h-full">
+    <div className="bg-gray-200 h-48 rounded-lg mb-4" />
+    <div className="h-6 bg-gray-300 rounded w-3/4 mb-2" />
+    <div className="h-4 bg-gray-300 rounded w-full mb-2" />
+    <div className="h-4 bg-gray-300 rounded w-5/6 mb-4" />
+    <div className="flex justify-between items-center mt-auto">
+      <div className="h-4 w-20 bg-gray-300 rounded"></div>
+      <div className="h-6 w-24 bg-gray-300 rounded"></div>
+    </div>
+  </div>
+);
+
 const ViewAllTop = () => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +54,7 @@ const ViewAllTop = () => {
       if (!articleLink.startsWith("http")) {
         navigate(articleLink, { state: { from: location.pathname } });
       } else {
-        window.location.href = articleLink;
+        window.open(articleLink, "_blank");
       }
     } else {
       navigate(`/article/${articleId}`, { state: { from: location.pathname } });
@@ -55,15 +68,17 @@ const ViewAllTop = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-800"></div>
+      <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(6)].map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded">
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-6xl mx-auto my-8 text-center">
         Error: {error}
       </div>
     );
@@ -71,18 +86,18 @@ const ViewAllTop = () => {
 
   if (!articles.length) {
     return (
-      <div className="text-center text-gray-400 py-8">
+      <div className="text-center text-gray-500 py-8 max-w-6xl mx-auto px-4">
         No articles available
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 bg-gray-900 text-gray-100">
+    <div className="max-w-6xl mx-auto px-4 py-8 bg-white text-black">
       <ScrollToTop />
       <motion.button
         onClick={handleBack}
-        className="flex items-center text-purple-400 mb-10 hover:text-purple-500 transition-colors"
+        className="flex items-center text-indigo-600 mb-10 hover:text-indigo-800 transition-colors"
         whileHover={{ x: -5 }}
       >
         <svg
@@ -102,7 +117,7 @@ const ViewAllTop = () => {
 
       {/* Featured Header */}
       <div className="mb-10">
-        <span className="bg-gradient-to-r from-blue-500 to-purple-800 text-purple-100 text-xs font-semibold px-2.5 py-0.5 rounded-full mb-2 text-center">
+        <span className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full mb-2 text-center inline-block">
           FEATURED
         </span>
         <motion.div
@@ -111,15 +126,15 @@ const ViewAllTop = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Healthy Eating Refresh
+          <h2 className="text-3xl font-bold text-black mb-3">
+            Explore All Featured Articles
           </h2>
-          <div className="w-16 h-1 bg-purple-400 mx-0"></div>
+          <div className="w-16 h-1 bg-gradient-to-r from-indigo-600 to-blue-600 rounded"></div>
         </motion.div>
-        <p className="text-lg text-gray-200 font-medium mb-2">
+        <p className="text-lg text-gray-700 font-medium mb-2">
           Letter from the Editor
         </p>
-        <p className="text-gray-300 max-w-2xl">
+        <p className="text-gray-600 max-w-2xl">
           At Fitness Club Nutrition, we want to help you eat food that makes you
           feel good...
         </p>
@@ -130,7 +145,7 @@ const ViewAllTop = () => {
         {articles.map((article, index) => (
           <motion.article
             key={article._id}
-            className="bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer"
+            className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer border border-gray-200"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
@@ -138,7 +153,7 @@ const ViewAllTop = () => {
             onClick={() => handleArticleClick(article._id, article.link)}
           >
             {/* Image */}
-            <div className="w-full h-48 sm:h-56 overflow-hidden">
+            <div className="w-full h-48 sm:h-56 overflow-hidden rounded-t-lg">
               <img
                 src={article.image}
                 alt={article.title}
@@ -149,24 +164,24 @@ const ViewAllTop = () => {
             {/* Content */}
             <div className="flex-1 p-4 sm:p-5 flex flex-col">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-bold text-white line-clamp-2">
+                <h3 className="text-lg font-bold text-black line-clamp-2">
                   {article.title}
                 </h3>
-                <span className="text-xs text-purple-400 bg-purple-900 bg-opacity-50 px-2 py-1 rounded-full ml-2 whitespace-nowrap flex-shrink-0">
+                <span className="text-xs text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full ml-2 whitespace-nowrap flex-shrink-0">
                   {article.meta.readTime}
                 </span>
               </div>
 
-              <p className="text-sm text-gray-300 mb-3 line-clamp-3">
+              <p className="text-sm text-gray-700 mb-3 line-clamp-3">
                 {article.content?.summary?.[0]?.text || article.excerpt}
               </p>
 
               <div className="mt-auto flex justify-between items-center">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-500">
                   {article.meta.date}
                 </span>
                 <button
-                  className="text-xs text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                  className="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleArticleClick(article._id, article.link);

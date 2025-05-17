@@ -47,14 +47,14 @@ const App = () => {
   return (
     <Router>
       <Navbar />
-      <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-gray-900">
+      <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-white-900">
         <ScrollToTop />
         <Routes>
           <Route
             path="/"
             element={
               <>
-                <Hero />
+                {/* <Hero /> */}
                 <ArticlesGrid />
                 <CategoryFilter />
                 <LatestArticles />
@@ -155,7 +155,7 @@ const App = () => {
           />
         </Routes>
         <ToastContainer
-          theme="dark"
+          theme="light"
           position="top-center"
           autoClose={5000}
           hideProgressBar={false}

@@ -4,7 +4,7 @@
 /* Reset default margins/padding */
 :root {
   font-family: "Poppins", sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
 }
 /* Add this to your global CSS file */
 html, body {
