@@ -112,11 +112,11 @@ const ArticlesGrid = () => {
   }
 
   return (
-    <section className="py-12 px-4 sm:px-6 bg-gray-50 min-h-screen h-[1400px] sm:h-[700px]">
+    <section className="py-6 px-4 sm:px-6 bg-gray-50 min-h-screen h-[1200px] sm:h-[700px]">
       <div className="max-w-6xl lg:max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
-          className="mb-12 lg:mb-8 text-center"
+          className="mb-6 lg:mb-8 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
@@ -128,7 +128,7 @@ const ArticlesGrid = () => {
         >
           <div className="inline-block">
             <motion.h1
-              className="text-4xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 tracking-tight leading-tight md:text-6xl"
+              className="text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 tracking-tight leading-tight md:text-6xl"
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.3 }}
@@ -143,15 +143,15 @@ const ArticlesGrid = () => {
               style={{ maxWidth: "320px" }}
             />
           </div>
-          <motion.p
-            className="mt-6 lg:mt-4 text-xl lg:text-lg text-gray-600 max-w-2xl lg:max-w-lg mx-auto font-light"
+          <motion.h2
+            className="mt-3 lg:mt-4 text-sm lg:text-lg text-gray-600 max-w-2xl lg:max-w-lg mx-auto font-light md:text-6xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
           >
             Your premier destination for expert health guidance and
             transformative wellness strategies.
-          </motion.p>
+          </motion.h2>
         </motion.div>
 
         {/* Main Content */}

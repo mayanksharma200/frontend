@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -7,32 +7,31 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import "./App.css";
-import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
-import ArticlesGrid from "./components/ArticlesGrid";
-import ArticleDetail from "./components/ArticleDetails";
 import CategoryFilter from "./components/CategoryFilter";
-import LatestArticles from "./components/LatestArticles";
 import TopReads from "./TopReads";
 import SpotlightSection from "./components/Spotlightsection";
 import SponsoredTopics from "./components/SponsoredTopics";
 import WellnessFooter from "./components/WellnessFooter";
-import Admin from "./components/Admin";
-import NutritionTop from "./components/nutrition/NutritionTop";
-import NutritionMid from "./components/nutrition/NutritionMid";
-import SleepTop from "./components/sleep/SleepTop";
-import SleepMid from "./components/sleep/SleepMid";
-import MentalTop from "./components/mental/MentalTop";
-import FitnessTop from "./components/fitness/FitnessTop";
-import FitnessMid from "./components/fitness/FitnessMid";
-import ProductTop from "./components/productreviews/ProductTop";
-import ProductMid from "./components/productreviews/ProductMid";
-import ViewAllTop from "./components/viewall/ViewAllTop";
-import ViewAllMid from "./components/viewall/ViewAllMid";
-import MentalMid from "./components/mental/MentalMid";
 
-// ScrollToTop component to handle scroll restoration
+// Lazy load route components
+const ArticlesGrid = lazy(() => import("./components/ArticlesGrid"));
+const ArticleDetail = lazy(() => import("./components/ArticleDetails"));
+const Admin = lazy(() => import("./components/Admin"));
+const NutritionTop = lazy(() => import("./components/nutrition/NutritionTop"));
+const NutritionMid = lazy(() => import("./components/nutrition/NutritionMid"));
+const SleepTop = lazy(() => import("./components/sleep/SleepTop"));
+const SleepMid = lazy(() => import("./components/sleep/SleepMid"));
+const MentalTop = lazy(() => import("./components/mental/MentalTop"));
+const MentalMid = lazy(() => import("./components/mental/MentalMid"));
+const FitnessTop = lazy(() => import("./components/fitness/FitnessTop"));
+const FitnessMid = lazy(() => import("./components/fitness/FitnessMid"));
+const ProductTop = lazy(() => import("./components/productreviews/ProductTop"));
+const ProductMid = lazy(() => import("./components/productreviews/ProductMid"));
+const ViewAllTop = lazy(() => import("./components/viewall/ViewAllTop"));
+const ViewAllMid = lazy(() => import("./components/viewall/ViewAllMid"));
+
+// ScrollToTop component remains the same
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -49,111 +48,103 @@ const App = () => {
       <Navbar />
       <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-white-900">
         <ScrollToTop />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                {/* <Hero /> */}
-                <ArticlesGrid />
-                <CategoryFilter />
-                <LatestArticles />
-                <TopReads />
-                <SpotlightSection />
-                <SponsoredTopics />
-                <WellnessFooter />
-              </>
-            }
-          />
+        <Suspense fallback={<div></div>}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <ArticlesGrid />
+                  <CategoryFilter />
+                  <TopReads />
+                  <SpotlightSection />
+                  <SponsoredTopics />
+                  <WellnessFooter />
+                </>
+              }
+            />
 
-          {/* Articles listing page */}
-          <Route
-            path="/articles"
-            element={
-              <>
-                <ArticlesGrid />
-                <WellnessFooter />
-              </>
-            }
-          />
+            <Route
+              path="/articles"
+              element={
+                <>
+                  <ArticlesGrid />
+                  <WellnessFooter />
+                </>
+              }
+            />
 
-          {/* Article detail page */}
-          <Route path="/article/:id" element={<ArticleDetail />} />
+            <Route path="/article/:id" element={<ArticleDetail />} />
 
-          {/* Admin page */}
-          <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<Admin />} />
 
-          {/* Nutrition page */}
-          <Route
-            path="/nutrition"
-            element={
-              <>
-                <NutritionTop />
-                <NutritionMid />
-                <WellnessFooter />
-              </>
-            }
-          />
+            <Route
+              path="/nutrition"
+              element={
+                <>
+                  <NutritionTop />
+                  <NutritionMid />
+                  <WellnessFooter />
+                </>
+              }
+            />
 
-          {/* Sleep page */}
-          <Route
-            path="/sleep"
-            element={
-              <>
-                <SleepTop />
-                <SleepMid />
-                <WellnessFooter />
-              </>
-            }
-          />
+            <Route
+              path="/sleep"
+              element={
+                <>
+                  <SleepTop />
+                  <SleepMid />
+                  <WellnessFooter />
+                </>
+              }
+            />
 
-          {/* Mental page */}
-          <Route
-            path="/Mental-health"
-            element={
-              <>
-                <MentalTop />
-                <MentalMid/>
-                <WellnessFooter />
-              </>
-            }
-          />
+            <Route
+              path="/Mental-health"
+              element={
+                <>
+                  <MentalTop />
+                  <MentalMid />
+                  <WellnessFooter />
+                </>
+              }
+            />
 
-          {/* Fitness page */}
-          <Route
-            path="/fitness"
-            element={
-              <>
-                <FitnessTop />
-                <FitnessMid />
-                <WellnessFooter />
-              </>
-            }
-          />
+            <Route
+              path="/fitness"
+              element={
+                <>
+                  <FitnessTop />
+                  <FitnessMid />
+                  <WellnessFooter />
+                </>
+              }
+            />
 
-          {/* Product reviews page */}
-          <Route
-            path="/product-reviews"
-            element={
-              <>
-                <ProductTop />
-                <ProductMid />
-                <WellnessFooter />
-              </>
-            }
-          />
-          {/* viewall page */}
-          <Route
-            path="/all-categories"
-            element={
-              <>
-                <ViewAllTop />
-                <ViewAllMid />
-                <WellnessFooter />
-              </>
-            }
-          />
-        </Routes>
+            <Route
+              path="/product-reviews"
+              element={
+                <>
+                  <ProductTop />
+                  <ProductMid />
+                  <WellnessFooter />
+                </>
+              }
+            />
+
+            <Route
+              path="/all-categories"
+              element={
+                <>
+                  <ViewAllTop />
+                  <ViewAllMid />
+                  <WellnessFooter />
+                </>
+              }
+            />
+          </Routes>
+        </Suspense>
         <ToastContainer
           theme="light"
           position="top-center"

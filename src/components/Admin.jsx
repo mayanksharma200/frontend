@@ -31,58 +31,58 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-    const positionOptions = [
-      {
-        label: "Index",
-        options: [
-          { label: "Top", value: "TopTwoArticles" },
-          { label: "This Just In", value: "JustIn" },
-          { label: "More Top Reads", value: "MoreTopReads" },
-        ],
-      },
-      {
-        label: "Nutrition",
-        options: [
-          { label: "Top", value: "NutritionTop" },
-          { label: "Mid", value: "NutritionMid" },
-        ],
-      },
-      {
-        label: "Sleep",
-        options: [
-          { label: "Top", value: "SleepTop" },
-          { label: "Mid", value: "SleepMid" },
-        ],
-      },
-      {
-        label: "Mental Health",
-        options: [
-          { label: "Top", value: "MentalHealthTop" },
-          { label: "Mid", value: "MentalHealthMid" },
-        ],
-      },
-      {
-        label: "Fitness",
-        options: [
-          { label: "Top", value: "FitnessTop" },
-          { label: "Mid", value: "FitnessMid" },
-        ],
-      },
-      {
-        label: "Product Reviews",
-        options: [
-          { label: "Top", value: "ProductReviewsTop" },
-          { label: "Mid", value: "ProductReviewsMid" },
-        ],
-      },
-      {
-        label: "View All",
-        options: [
-          { label: "Top", value: "ViewAllTop" },
-          { label: "Mid", value: "ViewAllMid" },
-        ],
-      },
-    ];
+  const positionOptions = [
+    {
+      label: "Index",
+      options: [
+        { label: "Top", value: "TopTwoArticles" },
+        { label: "This Just In", value: "JustIn" },
+        { label: "More Top Reads", value: "MoreTopReads" },
+      ],
+    },
+    {
+      label: "Nutrition",
+      options: [
+        { label: "Top", value: "NutritionTop" },
+        { label: "Mid", value: "NutritionMid" },
+      ],
+    },
+    {
+      label: "Sleep",
+      options: [
+        { label: "Top", value: "SleepTop" },
+        { label: "Mid", value: "SleepMid" },
+      ],
+    },
+    {
+      label: "Mental Health",
+      options: [
+        { label: "Top", value: "MentalHealthTop" },
+        { label: "Mid", value: "MentalHealthMid" },
+      ],
+    },
+    {
+      label: "Fitness",
+      options: [
+        { label: "Top", value: "FitnessTop" },
+        { label: "Mid", value: "FitnessMid" },
+      ],
+    },
+    {
+      label: "Product Reviews",
+      options: [
+        { label: "Top", value: "ProductReviewsTop" },
+        { label: "Mid", value: "ProductReviewsMid" },
+      ],
+    },
+    {
+      label: "View All",
+      options: [
+        { label: "Top", value: "ViewAllTop" },
+        { label: "Mid", value: "ViewAllMid" },
+      ],
+    },
+  ];
 
   useEffect(() => {
     fetchPosts();
@@ -128,32 +128,46 @@ const Admin = () => {
 
       if (response.data.success) {
         if (response.data.content) {
+          const aiContent = response.data.content;
+
           setFormData((prev) => ({
             ...prev,
+            title: aiContent.title || prev.title,
+            position: aiContent.position || prev.position,
+            link: aiContent.link || prev.link,
+            image: aiContent.image || prev.image,
+            meta: {
+              author: aiContent.meta?.author || prev.meta.author,
+              date: aiContent.meta?.date || prev.meta.date,
+              reviewer: aiContent.meta?.reviewer || prev.meta.reviewer,
+              readTime: aiContent.meta?.readTime || prev.meta.readTime,
+            },
+            related_studies: aiContent.related_studies || prev.related_studies,
             content: {
-              summary: response.data.content.summary || [],
-              body: [
-                ...(prev.content?.body || []),
-                ...(response.data.content.body || []).map((item) => ({
+              summary: aiContent.content?.summary || [],
+              body:
+                aiContent.content?.body?.map((item) => ({
                   headline: item.headline || "",
                   content: item.content || "",
                   keywords: item.keywords || [],
-                  hyperlinks: (item.keywords || []).map((keyword) => ({
-                    keyword,
-                    link: "",
+                  hyperlinks: (item.hyperlinks || []).map((link) => ({
+                    keyword: link.keyword || "",
+                    link: link.link || "",
                   })),
-                  subsections: item.subsections || [],
-                })),
-              ],
+                  subsections:
+                    item.subsections?.map((sub) => ({
+                      subheading: sub.subheading || "",
+                      content: sub.content || "", // <-- add this line
+                    })) || [],
+                })) || [],
             },
           }));
         } else if (response.data.rawContent) {
           setFormData((prev) => ({
             ...prev,
             content: {
-              ...prev.content,
+              summary: [],
               body: [
-                ...(prev.content?.body || []),
                 {
                   headline: "Generated Content",
                   content: response.data.rawContent,
@@ -1005,7 +1019,7 @@ const Admin = () => {
                         type="button"
                         className="px-2 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600"
                         onClick={() =>
-                          handleSubsectionChange(index, -1, "subheading", "")
+                          handleSubsectionChange(index, -1, "subheadline", "")
                         }
                       >
                         Add Subsection
@@ -1025,7 +1039,7 @@ const Admin = () => {
                             <input
                               type="text"
                               className="w-full px-2 py-1 border rounded text-sm text-black"
-                              value={subsection.subheading || ""}
+                              value={subsection.subheadline || ""}
                               onChange={(e) =>
                                 handleSubsectionChange(
                                   index,

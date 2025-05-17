@@ -247,7 +247,9 @@ const ArticleDetail = () => {
                         className="mb-6 pl-4 border-l-2 border-indigo-200"
                       >
                         <h3 className="text-xl font-semibold text-indigo-600 mb-3">
-                          {subsection.subheading}
+                          {subsection.subheading?.trim() ||
+                            subsection.subheadline ||
+                            ""}
                         </h3>
                         <div className="text-gray-700 text-lg leading-relaxed space-y-4">
                           <ReactMarkdown
