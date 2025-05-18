@@ -57,8 +57,8 @@ const App = () => {
                   <ArticlesGrid />
                   <CategoryFilter />
                   <TopReads />
-                  <SpotlightSection />
-                  <SponsoredTopics />
+                  {/* <SpotlightSection /> */}
+                  {/* <SponsoredTopics /> */}
                   <WellnessFooter />
                 </>
               }
