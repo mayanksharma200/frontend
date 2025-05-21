@@ -19,7 +19,7 @@ const FitnessTop = () => {
     const fetchArticles = async () => {
       try {
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/fitness-top"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/fitness-top"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch articles");

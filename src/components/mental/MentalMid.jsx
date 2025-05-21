@@ -16,7 +16,7 @@ const MentalMid = () => {
     const fetchTips = async () => {
       try {
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/mental-mid"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/mental-mid"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch mental tips");

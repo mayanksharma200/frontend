@@ -14,7 +14,7 @@ const LatestArticles = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/just-in"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/just-in"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch articles");

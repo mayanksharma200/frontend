@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const WellnessFooter = () => {
   return (
@@ -45,115 +46,67 @@ const WellnessFooter = () => {
           </div>
 
           {/* Right Column - Navigation Links */}
-          <div className="lg:w-1/2 grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+          <div className="lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
             <div className="min-w-[160px]">
               <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-4 text-base uppercase tracking-wider">
-                ABOUT US
+                ABOUT
               </h4>
               <ul className="space-y-3">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/about"
                     className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
-                    External Links
-                  </a>
+                    About Us
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/contact"
                     className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                  >
-                    Privacy Policy
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
 
             <div className="min-w-[160px]">
               <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-4 text-base uppercase tracking-wider">
-                PRIVACY
+                POLICIES
               </h4>
               <ul className="space-y-3">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/terms"
                     className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
-                    Privacy Settings
-                  </a>
+                    Terms and Policy
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/cookies"
                     className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
-                    Advertising Policy
-                  </a>
+                    Cookies Policy
+                  </Link>
                 </li>
+              </ul>
+            </div>
+
+            <div className="min-w-[160px]">
+              <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-4 text-base uppercase tracking-wider">
+                HEALTH
+              </h4>
+              <ul className="space-y-3">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/nutrition"
                     className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Health Topics
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="min-w-[160px]">
-              <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-4 text-base uppercase tracking-wider">
-                RESOURCES
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                  >
-                    Sitemap
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                  >
-                    Medical Affairs
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                  >
-                    Content Integrity
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="min-w-[160px]">
-              <h4 className="font-bold text-gray-700 dark:text-gray-200 mb-4 text-base uppercase tracking-wider">
-                SUBSCRIBE
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                  >
-                    Newsletters
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

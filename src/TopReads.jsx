@@ -14,7 +14,7 @@ const TopReads = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/more-top-reads"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/more-top-reads"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch articles");

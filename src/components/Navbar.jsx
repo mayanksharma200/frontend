@@ -1,114 +1,115 @@
-// Navbar.jsx
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-// import logo from "../assets/logos/newest/newestSize1.png";
-import { navItems } from "../constants";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+
+const navItems = [
+  { label: "Healthy Diet", href: "/nutrition" },
+  { label: "Sleep Wellness Guide", href: "/sleep" },
+  { label: "Mental Wellness", href: "/mental-health" },
+  { label: "Fitness Wellness", href: "/fitness" },
+  { label: "Products", href: "/product-reviews" },
+  { label: "View All", href: "/all-categories" },
+];
+
+const drawerVariants = {
+  hidden: { x: "100%" },
+  visible: { x: 0 },
+  exit: { x: "100%" },
+};
+
+const backdropVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 0.5 },
+  exit: { opacity: 0 },
+};
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const toggleNavbar = () => {
-    setMobileDrawerOpen(!mobileDrawerOpen);
-  };
-
-  const handleNavigation = (href) => {
-    setMobileDrawerOpen(false);
-    setTimeout(() => {
-      const section = document.querySelector(href);
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
+    setMobileDrawerOpen((prev) => !prev);
   };
 
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg bg-white/90 border-b border-gray-300 shadow-sm">
-      <div className="container px-4 mx-auto relative lg:text-sm">
+      <div className="container px-4 mx-auto relative text-sm">
         <div className="flex justify-between items-center h-14 mx-4 lg:mx-14">
           <div className="flex items-center flex-shrink-0">
-            {/* <img
-              className="h-20 w-15 mr-2 object-cover"
-              src={logo}
-              alt="Logo"
-            /> */}
             <span className="text-xl tracking-wide font-semibold text-gray-900">
               Fitness Club
             </span>
           </div>
 
-          {/* Desktop Buttons */}
-          <div className="hidden lg:flex justify-center space-x-12 items-center">
-            <a
-              href="#"
-              className="py-2 px-4 border rounded-lg text-gray-700 border-gray-400 hover:bg-gray-100 transition shadow-sm"
-            >
-              Sign In
-            </a>
-            <a
-              href="#"
-              className="bg-gradient-to-r from-purple-600 to-indigo-700 py-2 px-5 rounded-lg text-white shadow-md hover:opacity-90 transition"
-            >
-              Create an account
-            </a>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden md:flex flex-col justify-center">
-            <button onClick={toggleNavbar} className="text-gray-900">
-              {mobileDrawerOpen ? <X size={30} /> : <Menu size={30} />}
-            </button>
-          </div>
+          {/* Hamburger Menu Button - visible on all screen sizes */}
+          <button
+            onClick={toggleNavbar}
+            aria-label={mobileDrawerOpen ? "Close menu" : "Open menu"}
+            className="text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+          >
+            {mobileDrawerOpen ? <X size={30} /> : <Menu size={30} />}
+          </button>
         </div>
 
-        {/* Mobile Drawer */}
-        {mobileDrawerOpen && (
-          <div className="fixed inset-0 z-20 flex flex-col items-start justify-start pt-24 px-6 bg-white min-h-screen shadow-lg">
-            {/* Close Button */}
-            <button
-              onClick={toggleNavbar}
-              className="absolute top-5 right-5 text-gray-900 hover:text-purple-600 transition"
-            >
-              <X size={30} />
-            </button>
+        {/* Backdrop and Animated Mobile Drawer */}
+        <AnimatePresence>
+          {mobileDrawerOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                key="backdrop"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={backdropVariants}
+                transition={{ duration: 0.3 }}
+                onClick={toggleNavbar}
+                className="fixed inset-0 z-10 bg-black"
+                style={{ pointerEvents: "auto" }}
+              />
 
-            {/* Mobile Nav Items */}
-            <ul className="w-full">
-              {navItems.map((item, index) => (
-                <li
-                  key={index}
-                  className="py-4 border-b border-gray-200 w-full"
-                >
-                  <a
-                    href={item.href}
-                    className="text-gray-900 hover:text-purple-600 transition block w-full"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavigation(item.href);
-                    }}
+              {/* Drawer */}
+              <motion.div
+                key="drawer"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={drawerVariants}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="fixed top-0 right-0 z-20 h-[100vh] w-64 bg-white shadow-lg border-l border-gray-200 flex flex-col p-6"
+              >
+                {/* Heading and Close Button in one row */}
+                <div className="flex items-center justify-between mb-8 border-b border-indigo-300 pb-3">
+                  <h2 className="text-2xl font-extrabold tracking-wide text-indigo-700">
+                    Fitness Wellness
+                  </h2>
+                  <button
+                    onClick={toggleNavbar}
+                    aria-label="Close menu"
+                    className="text-gray-900 hover:text-indigo-600 transition"
                   >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+                    <X size={30} />
+                  </button>
+                </div>
 
-            {/* Mobile Buttons */}
-            <div className="flex space-x-6 mt-6">
-              <a
-                href="#"
-                className="py-2 px-4 border rounded-lg text-gray-700 border-gray-400 hover:bg-gray-100 transition shadow-sm"
-              >
-                Sign In
-              </a>
-              <a
-                href="#"
-                className="py-2 px-5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-700 text-white hover:opacity-90 transition shadow-md"
-              >
-                Create an account
-              </a>
-            </div>
-          </div>
-        )}
+                {/* Navigation Links */}
+                <ul className="flex flex-col space-y-6 text-lg font-medium">
+                  {navItems.map(({ label, href }) => (
+                    <li key={href}>
+                      <Link
+                        to={href}
+                        onClick={() => setMobileDrawerOpen(false)}
+                        className="text-gray-900 hover:text-indigo-600 transition"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

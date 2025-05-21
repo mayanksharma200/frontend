@@ -29,7 +29,7 @@ const ViewAllMid = () => {
     const fetchTips = async () => {
       try {
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/viewall-mid"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/viewall-mid"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch");

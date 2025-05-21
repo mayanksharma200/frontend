@@ -21,7 +21,7 @@ const ArticleDetail = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://fitness-backend-api.vercel.app/api/posts/${id}`
+          `https://fitness-backend-api-production.up.railway.app/api/posts/${id}`
         );
         setArticle(response.data);
         setError(null);

@@ -1,3 +1,4 @@
+// App.jsx
 import React, { Suspense, lazy } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,9 +11,14 @@ import {
 import Navbar from "./components/Navbar";
 import CategoryFilter from "./components/CategoryFilter";
 import TopReads from "./TopReads";
-import SpotlightSection from "./components/Spotlightsection";
-import SponsoredTopics from "./components/SponsoredTopics";
 import WellnessFooter from "./components/WellnessFooter";
+import About from "./components/About";
+import ContactUs from "./components/ContactUs";
+import TermsAndPolicy from "./components/TermsAndPolicy";
+import CookiesPolicy from "./components/CookiesPolicy";
+import VideoGallery from "./components/VideoGallery";
+import AdminVideoUpload from "./components/AdminVideoUpload";
+import AdminCus from "./components/admin/AdminCus"
 
 // Lazy load route components
 const ArticlesGrid = lazy(() => import("./components/ArticlesGrid"));
@@ -46,9 +52,11 @@ const App = () => {
   return (
     <Router>
       <Navbar />
-      <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-white-900">
+      <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-white">
         <ScrollToTop />
-        <Suspense fallback={<div></div>}>
+        <Suspense
+          fallback={<div className="text-center py-10">Loading...</div>}
+        >
           <Routes>
             <Route
               path="/"
@@ -77,6 +85,7 @@ const App = () => {
             <Route path="/article/:id" element={<ArticleDetail />} />
 
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admincus" element={<AdminCus />} />
 
             <Route
               path="/nutrition"
@@ -101,7 +110,7 @@ const App = () => {
             />
 
             <Route
-              path="/Mental-health"
+              path="/mental-health"
               element={
                 <>
                   <MentalTop />
@@ -143,6 +152,14 @@ const App = () => {
                 </>
               }
             />
+
+            {/* Add routes for footer pages */}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/terms" element={<TermsAndPolicy />} />
+            <Route path="/cookies" element={<CookiesPolicy />} />
+            <Route path="/videos" element={<VideoGallery />} />
+            <Route path="/adminvideos" element={<AdminVideoUpload />} />
           </Routes>
         </Suspense>
         <ToastContainer

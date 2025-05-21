@@ -17,7 +17,7 @@ const NutritionMid = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/mid-nutrition"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/mid-nutrition"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch nutrition tips");

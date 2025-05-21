@@ -19,7 +19,7 @@ const SleepTop = () => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "https://fitness-backend-api.vercel.app/api/posts/sleep-top"
+          "https://fitness-backend-api-production.up.railway.app/api/posts/sleep-top"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch articles");

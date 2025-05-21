@@ -18,9 +18,11 @@ const ArticlesGrid = () => {
 
         const [topArticlesRes, latestArticlesRes] = await Promise.all([
           axios.get(
-            "https://fitness-backend-api.vercel.app/api/posts/top-articles"
+            "https://fitness-backend-api-production.up.railway.app/api/posts/top-articles"
           ),
-          axios.get("https://fitness-backend-api.vercel.app/api/posts/just-in"),
+          axios.get(
+            "https://fitness-backend-api-production.up.railway.app/api/posts/just-in"
+          ),
         ]);
 
         setArticles(topArticlesRes.data);
