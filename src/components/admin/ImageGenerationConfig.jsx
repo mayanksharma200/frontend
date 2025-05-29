@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
+// Utility function inside this file
+function getOptimizedUnsplashUrl(url, width = 800) {
+  if (!url || !url.includes("unsplash.com")) return url;
+  return url.split("?")[0] + `?fm=webp&w=${width}&q=80`;
+}
+
 export default function ImageGenerationConfig({
   image,
   setImage,
@@ -22,7 +28,6 @@ export default function ImageGenerationConfig({
   const [previewUrl, setPreviewUrl] = useState(null);
   const scrollRef = useRef(null);
 
-  // Fetch images only when picker is shown and searchQuery is set
   useEffect(() => {
     if (!showPicker || !searchQuery.trim()) {
       setImages([]);
@@ -72,7 +77,7 @@ export default function ImageGenerationConfig({
     setPreviewUrl(null);
   };
 
-  // Modal preview for selected image
+  // Modal preview for selected image (optimized)
   const PreviewModal = () => (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm"
@@ -106,16 +111,17 @@ export default function ImageGenerationConfig({
             />
           </svg>
         </button>
-
         <div className="relative">
           <img
-            src={previewUrl}
+            src={getOptimizedUnsplashUrl(previewUrl, 800)}
             alt="Preview"
             className="max-w-full max-h-[70vh] object-contain rounded"
+            width={800}
+            height={500}
           />
           <button
             onClick={() => {
-              setImage(previewUrl);
+              setImage(getOptimizedUnsplashUrl(previewUrl, 800));
               setPreviewUrl(null);
               closePicker();
             }}
@@ -154,7 +160,9 @@ export default function ImageGenerationConfig({
         <input
           type="text"
           value={image}
-          onChange={(e) => setImage(e.target.value)}
+          onChange={(e) =>
+            setImage(getOptimizedUnsplashUrl(e.target.value, 800))
+          }
           placeholder="Enter or generate image URL"
           className="border p-2 rounded w-full"
         />
@@ -246,9 +254,12 @@ export default function ImageGenerationConfig({
                     title="Click to preview this image"
                   >
                     <img
-                      src={img.urls.small}
+                      src={getOptimizedUnsplashUrl(img.urls.small, 400)}
                       alt={img.alt_description || "Unsplash"}
                       className="w-full h-32 object-cover rounded bg-gray-100"
+                      width={400}
+                      height={200}
+                      loading="lazy"
                     />
                   </button>
                 ))}
@@ -267,7 +278,6 @@ export default function ImageGenerationConfig({
               )}
             </div>
           </div>
-
           {/* Preview modal */}
           {previewUrl && <PreviewModal />}
         </div>

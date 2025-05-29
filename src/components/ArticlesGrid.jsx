@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getOptimizedUnsplashUrl } from "./utils/imageOptimizer";
 
 const ArticlesGrid = () => {
   const navigate = useNavigate();
@@ -15,7 +17,6 @@ const ArticlesGrid = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
         const [topArticlesRes, latestArticlesRes] = await Promise.all([
           axios.get(
             "https://fitness-backend-api-production.up.railway.app/api/posts/top-articles"
@@ -24,7 +25,6 @@ const ArticlesGrid = () => {
             "https://fitness-backend-api-production.up.railway.app/api/posts/just-in"
           ),
         ]);
-
         setArticles(topArticlesRes.data);
         setLatestArticles(latestArticlesRes.data);
         setError(null);
@@ -36,12 +36,7 @@ const ArticlesGrid = () => {
         setLoading(false);
       }
     };
-
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 1500);
-
-    return () => clearTimeout(timer);
+    fetchData();
   }, [retryCount]);
 
   const handleArticleClick = (articleId, articleLink) => {
@@ -57,31 +52,39 @@ const ArticlesGrid = () => {
   };
 
   // Skeleton Loading Components
-  const SkeletonCard = ({ isLarge = false }) => (
-    <div
-      className={`bg-gray-100 ${
-        isLarge ? "lg:h-[300px] h-[250px]" : "lg:h-[200px] h-[400px]"
-      }`}
-    >
-      <div className="h-48 lg:h-32 bg-gray-200 animate-pulse"></div>
-      <div className="p-6 lg:p-4">
-        <div className="h-6 lg:h-5 w-3/4 bg-gray-200 rounded mb-4 lg:mb-2 animate-pulse"></div>
-        {isLarge && (
-          <>
-            <div className="space-y-2">
-              <div className="h-4 lg:h-3 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-4 lg:h-3 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-4 lg:h-3 w-1/2 bg-gray-200 rounded animate-pulse"></div>
-            </div>
-            <div className="flex justify-between mt-6 lg:mt-4">
-              <div className="h-4 lg:h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-4 lg:h-3 w-20 bg-gray-200 rounded animate-pulse"></div>
-            </div>
-          </>
-        )}
+  const SkeletonCard = ({ isLarge = false }) => {
+    if (isLarge) {
+      return (
+        <div
+          className="bg-gray-100 rounded-lg flex flex-col lg:h-[400px] h-[480px]"
+          style={{ gridColumn: "span 2", gridRow: "span 2" }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1737625854730-56e11fcaff17?fm=webp&w=400&q=50"
+            srcSet="
+              https://images.unsplash.com/photo-1737625854730-56e11fcaff17?fm=webp&w=300&q=50 300w,
+              https://images.unsplash.com/photo-1737625854730-56e11fcaff17?fm=webp&w=400&q=50 400w,
+              https://images.unsplash.com/photo-1737625854730-56e11fcaff17?fm=webp&w=800&q=70 800w
+            "
+            sizes="(max-width: 600px) 300px, (max-width: 900px) 400px, 800px"
+            alt="Fitness Club"
+            className="h-[300px] lg:h-[250px] w-full object-cover rounded-t-lg"
+            style={{ minHeight: 180, background: "#e5e7eb" }}
+            loading="eager"
+          />
+          <div className="flex-1"></div>
+        </div>
+      );
+    }
+    return (
+      <div className="bg-gray-100 h-[150px] lg:h-[180px]">
+        <div className="h-[120px] lg:h-[120px] w-full bg-gray-200 animate-pulse"></div>
+        <div className="p-4 lg:p-3">
+          <div className="h-5 lg:h-6 w-full bg-gray-200 rounded animate-pulse"></div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const SkeletonSmallCard = () => (
     <div className="bg-gray-100 h-[150px] lg:h-[180px]">
@@ -114,7 +117,23 @@ const ArticlesGrid = () => {
   }
 
   return (
-    <section className="py-6 px-4 sm:px-6 bg-gray-50 min-h-screen h-[1200px] sm:h-[700px]">
+    <section className="py-2 px-4 sm:px-6 bg-gray-50">
+      {/* --- Helmet for LCP image preloading --- */}
+      {articles[0]?.image && (
+        <Helmet>
+          <link
+            rel="preload"
+            as="image"
+            href={getOptimizedUnsplashUrl(articles[0].image, 400)}
+            imagesrcset={`
+              ${getOptimizedUnsplashUrl(articles[0].image, 400)} 400w,
+              ${getOptimizedUnsplashUrl(articles[0].image, 800)} 800w
+            `}
+            imagesizes="(max-width: 600px) 400px, 800px"
+          />
+        </Helmet>
+      )}
+
       <div className="max-w-6xl lg:max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -128,28 +147,11 @@ const ArticlesGrid = () => {
             delay: 0.2,
           }}
         >
-          <div className="inline-block">
-            <motion.h1
-              className="text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 tracking-tight leading-tight md:text-6xl"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.3 }}
-            >
-              Fitness Club
-            </motion.h1>
-            <motion.div
-              className="h-1 bg-gradient-to-r from-indigo-400 to-blue-300 rounded-full mt-2 mx-auto"
-              initial={{ width: 0 }}
-              animate={{ width: "80%" }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              style={{ maxWidth: "320px" }}
-            />
-          </div>
           <motion.h2
-            className="mt-3 lg:mt-4 text-sm lg:text-lg text-gray-600 max-w-2xl lg:max-w-lg mx-auto font-light md:text-6xl"
+            className="mt-3 text-sm lg:text-lg text-gray-600 max-w-2xl lg:max-w-lg mx-auto font-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.3 }}
           >
             Your premier destination for expert health guidance and
             transformative wellness strategies.
@@ -162,19 +164,17 @@ const ArticlesGrid = () => {
           <div className="w-full lg:w-3/4">
             {loading ? (
               <motion.div
-                className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-6 lg:gap-4 pb-6 lg:pb-4"
+                className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-4 pb-6 lg:pb-4"
                 initial="hidden"
                 animate="visible"
               >
                 <SkeletonCard isLarge={true} />
-
                 <div className="lg:hidden">
                   <SkeletonSmallCard />
                 </div>
                 <div className="lg:hidden">
                   <SkeletonSmallCard />
                 </div>
-
                 <div className="hidden lg:block">
                   <SkeletonSmallCard />
                 </div>
@@ -185,7 +185,7 @@ const ArticlesGrid = () => {
             ) : (
               <>
                 <motion.div
-                  className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-6 lg:gap-4 pb-6 lg:pb-4"
+                  className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-4 pb-6 lg:pb-4"
                   initial="hidden"
                   animate="visible"
                   variants={{
@@ -216,13 +216,20 @@ const ArticlesGrid = () => {
                     >
                       <div className="h-[300px] lg:h-[250px] overflow-hidden">
                         <img
-                          src={
-                            articles[0].image ||
-                            "https://via.placeholder.com/800x600.png?text=No+Image"
-                          }
+                          src={getOptimizedUnsplashUrl(articles[0].image, 400)}
+                          srcSet={`
+                            ${getOptimizedUnsplashUrl(
+                              articles[0].image,
+                              400
+                            )} 400w,
+                            ${getOptimizedUnsplashUrl(
+                              articles[0].image,
+                              800
+                            )} 800w
+                          `}
+                          sizes="(max-width: 600px) 400px, 800px"
                           alt={articles[0].title}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                          loading="lazy"
+                          loading="eager"
                         />
                       </div>
                       <div className="p-6 lg:p-4 flex flex-col flex-1">
@@ -270,8 +277,12 @@ const ArticlesGrid = () => {
                         <div className="w-[100px] sm:w-[120px] h-full overflow-hidden flex-shrink-0">
                           <img
                             src={
-                              articles[1].image ||
-                              "https://via.placeholder.com/800x600.png?text=No+Image"
+                              articles[1].image
+                                ? getOptimizedUnsplashUrl(
+                                    articles[1].image,
+                                    400
+                                  )
+                                : "https://via.placeholder.com/800x600.png?text=No+Image"
                             }
                             alt={articles[1].title}
                             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -321,8 +332,12 @@ const ArticlesGrid = () => {
                         <div className="w-[100px] sm:w-[120px] h-full overflow-hidden flex-shrink-0">
                           <img
                             src={
-                              articles[2].image ||
-                              "https://via.placeholder.com/800x600.png?text=No+Image"
+                              articles[2].image
+                                ? getOptimizedUnsplashUrl(
+                                    articles[2].image,
+                                    400
+                                  )
+                                : "https://via.placeholder.com/800x600.png?text=No+Image"
                             }
                             alt={articles[2].title}
                             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -378,8 +393,12 @@ const ArticlesGrid = () => {
                         <div className="h-[120px] w-full overflow-hidden">
                           <img
                             src={
-                              articles[1].image ||
-                              "https://via.placeholder.com/800x600.png?text=No+Image"
+                              articles[1].image
+                                ? getOptimizedUnsplashUrl(
+                                    articles[1].image,
+                                    400
+                                  )
+                                : "https://via.placeholder.com/800x600.png?text=No+Image"
                             }
                             alt={articles[1].title}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
@@ -420,8 +439,12 @@ const ArticlesGrid = () => {
                         <div className="h-[120px] w-full overflow-hidden">
                           <img
                             src={
-                              articles[2].image ||
-                              "https://via.placeholder.com/800x600.png?text=No+Image"
+                              articles[2].image
+                                ? getOptimizedUnsplashUrl(
+                                    articles[2].image,
+                                    400
+                                  )
+                                : "https://via.placeholder.com/800x600.png?text=No+Image"
                             }
                             alt={articles[2].title}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
@@ -468,8 +491,9 @@ const ArticlesGrid = () => {
                         <div className="h-[100px] lg:h-[120px] w-full overflow-hidden">
                           <img
                             src={
-                              article.image ||
-                              "https://via.placeholder.com/800x600.png?text=No+Image"
+                              article.image
+                                ? getOptimizedUnsplashUrl(article.image, 400)
+                                : "https://via.placeholder.com/800x600.png?text=No+Image"
                             }
                             alt={article.title}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"

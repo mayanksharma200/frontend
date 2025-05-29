@@ -18,7 +18,7 @@ import TermsAndPolicy from "./components/TermsAndPolicy";
 import CookiesPolicy from "./components/CookiesPolicy";
 import VideoGallery from "./components/VideoGallery";
 import AdminVideoUpload from "./components/AdminVideoUpload";
-import AdminCus from "./components/admin/AdminCus"
+import AdminCus from "./components/admin/AdminCus";
 
 // Lazy load route components
 const ArticlesGrid = lazy(() => import("./components/ArticlesGrid"));
@@ -37,16 +37,34 @@ const ProductMid = lazy(() => import("./components/productreviews/ProductMid"));
 const ViewAllTop = lazy(() => import("./components/viewall/ViewAllTop"));
 const ViewAllMid = lazy(() => import("./components/viewall/ViewAllMid"));
 
-// ScrollToTop component remains the same
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
   return null;
 };
+
+const SuspenseFallback = () => (
+  <section className="py-6 px-4 sm:px-6 bg-gray-50 min-h-screen h-[1200px] sm:h-[700px]">
+    <div className="max-w-6xl lg:max-w-5xl mx-auto">
+      <div className="mb-6 lg:mb-8 text-center">
+        <div className="inline-block w-full">
+          <h2 className="mt-3 text-sm lg:text-lg text-gray-600 max-w-2xl lg:max-w-lg mx-auto font-light md:text-6xl">
+            Your premier destination for expert health guidance and
+            transformative wellness strategies.
+          </h2>
+          <div
+            className="mx-auto w-full h-[220px] object-cover rounded-lg mt-4 mb-2 bg-gray-200 animate-pulse"
+            style={{ maxWidth: 800, minHeight: 180, background: "#e5e7eb" }}
+          />
+        </div>
+      </div>
+      {/* Optionally: Add grid/card skeletons below if needed */}
+    </div>
+  </section>
+);
+
 
 const App = () => {
   return (
@@ -54,9 +72,7 @@ const App = () => {
       <Navbar />
       <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-white">
         <ScrollToTop />
-        <Suspense
-          fallback={<div className="text-center py-10">Loading...</div>}
-        >
+        <Suspense fallback={<SuspenseFallback />}>
           <Routes>
             <Route
               path="/"
@@ -65,13 +81,10 @@ const App = () => {
                   <ArticlesGrid />
                   <CategoryFilter />
                   <TopReads />
-                  {/* <SpotlightSection /> */}
-                  {/* <SponsoredTopics /> */}
                   <WellnessFooter />
                 </>
               }
             />
-
             <Route
               path="/articles"
               element={
@@ -81,12 +94,9 @@ const App = () => {
                 </>
               }
             />
-
             <Route path="/article/:id" element={<ArticleDetail />} />
-
             <Route path="/admin" element={<Admin />} />
             <Route path="/admincus" element={<AdminCus />} />
-
             <Route
               path="/nutrition"
               element={
@@ -97,7 +107,6 @@ const App = () => {
                 </>
               }
             />
-
             <Route
               path="/sleep"
               element={
@@ -108,7 +117,6 @@ const App = () => {
                 </>
               }
             />
-
             <Route
               path="/mental-health"
               element={
@@ -119,7 +127,6 @@ const App = () => {
                 </>
               }
             />
-
             <Route
               path="/fitness"
               element={
@@ -130,7 +137,6 @@ const App = () => {
                 </>
               }
             />
-
             <Route
               path="/product-reviews"
               element={
@@ -141,7 +147,6 @@ const App = () => {
                 </>
               }
             />
-
             <Route
               path="/all-categories"
               element={
@@ -152,8 +157,6 @@ const App = () => {
                 </>
               }
             />
-
-            {/* Add routes for footer pages */}
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/terms" element={<TermsAndPolicy />} />
