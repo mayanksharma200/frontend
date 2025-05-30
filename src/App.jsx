@@ -19,6 +19,7 @@ import CookiesPolicy from "./components/CookiesPolicy";
 import VideoGallery from "./components/VideoGallery";
 import AdminVideoUpload from "./components/AdminVideoUpload";
 import AdminCus from "./components/admin/AdminCus";
+import { sendPageView } from "./analytics"; // Add this import
 
 // Lazy load route components
 const ArticlesGrid = lazy(() => import("./components/ArticlesGrid"));
@@ -37,11 +38,21 @@ const ProductMid = lazy(() => import("./components/productreviews/ProductMid"));
 const ViewAllTop = lazy(() => import("./components/viewall/ViewAllTop"));
 const ViewAllMid = lazy(() => import("./components/viewall/ViewAllMid"));
 
+// Scroll to top on route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+  return null;
+};
+
+// Track page view on route change (Google Analytics)
+const PageViewTracker = () => {
+  const location = useLocation();
+  React.useEffect(() => {
+    sendPageView(location.pathname + location.search);
+  }, [location]);
   return null;
 };
 
@@ -65,13 +76,13 @@ const SuspenseFallback = () => (
   </section>
 );
 
-
 const App = () => {
   return (
     <Router>
       <Navbar />
       <div className="max-w-10xl mx-auto h-auto overflow-x-hidden bg-white">
         <ScrollToTop />
+        <PageViewTracker />
         <Suspense fallback={<SuspenseFallback />}>
           <Routes>
             <Route
