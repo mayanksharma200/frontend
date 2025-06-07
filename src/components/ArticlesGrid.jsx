@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getOptimizedUnsplashUrl } from "./utils/imageOptimizer";
+import AdSlot from "./AdSlot";
+
 
 const ArticlesGrid = () => {
   const navigate = useNavigate();

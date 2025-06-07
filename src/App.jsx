@@ -20,6 +20,8 @@ import VideoGallery from "./components/VideoGallery";
 import AdminVideoUpload from "./components/AdminVideoUpload";
 import AdminCus from "./components/admin/AdminCus";
 import { sendPageView } from "./analytics"; // Add this import
+import AdSlot from "./components/AdSlot";
+
 
 // Lazy load route components
 const ArticlesGrid = lazy(() => import("./components/ArticlesGrid"));
@@ -89,7 +91,19 @@ const App = () => {
               path="/"
               element={
                 <>
+                  <AdSlot
+                    size="728x90"
+                    url="https://www.dell.com/offer"
+                    alt="Amazing Dell offer! Click to learn more"
+                  />
+
                   <ArticlesGrid />
+                  <AdSlot
+                    size="1000x300"
+                    url="https://www.dell.com/offer"
+                    alt="Amazing Dell offer! Click to learn more"
+                  />
+
                   <CategoryFilter />
                   <TopReads />
                   <WellnessFooter />
