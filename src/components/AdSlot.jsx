@@ -17,56 +17,77 @@ const sizeMap = {
 };
 
 const AdSlot = ({
-  size = "728x90",
+  alt = "Advertisement",
+  url,
+  label = "ADVERTISEMENT",
   className = "",
   style = {},
-  alt = "Advertisement",
-  url, // <-- New prop for external link
-}) => {
-  const { width, height } = sizeMap[size] || sizeMap["728x90"];
-  const imgElement = (
-    <img
-      src={`/ads/${size}.jpg`}
-      alt={alt}
-      loading="lazy"
-      style={{
-        width: "100%",
-        height: "auto",
-        maxWidth: width,
-        maxHeight: height,
-        objectFit: "contain",
-        borderRadius: "14px",
-        boxShadow: "0 2px 12px 0 rgba(50,50,93,.07)",
-        background: "#fff",
-        display: "block",
-        cursor: url ? "pointer" : "default",
-      }}
-    />
-  );
-
-  return (
+}) => (
+  // Mobile: gray bg | Desktop: transparent bg
+  <div className="w-full bg-neutral-200 sm:bg-transparent py-5 flex justify-center items-center">
+    {/* Desktop */}
     <div
-      className={`flex justify-center items-center w-full mx-auto my-6 ${className}`}
-      style={{
-        maxWidth: width,
-        ...style,
-      }}
+      className="hidden sm:flex flex-col items-center w-full"
+      style={{ maxWidth: 728 }}
     >
-      {url ? (
+      {/* Label */}
+      <div className="w-full text-center pt-2 pb-2">
+        <span className="text-[11px] text-neutral-500 font-semibold tracking-widest uppercase select-none">
+          {label}
+        </span>
+      </div>
+      {/* Image, NO white bg/card */}
+      <div className="w-full flex justify-center items-center px-2 pb-2">
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ display: "block", width: "100%" }}
+          className="block w-full"
           aria-label={alt}
         >
-          {imgElement}
+          <img
+            src="/ads/728x90.jpg"
+            alt={alt}
+            loading="lazy"
+            className="w-full h-auto object-contain"
+            style={{ maxWidth: 728 }}
+          />
         </a>
-      ) : (
-        imgElement
-      )}
+      </div>
     </div>
-  );
-};
+    {/* Mobile: everything in a card */}
+    <div
+      className="flex flex-col items-center w-full sm:hidden px-2"
+      style={{ maxWidth: 340 }}
+    >
+      <div className="w-full bg-white rounded-lg shadow flex flex-col items-center">
+        {/* Label INSIDE CARD */}
+        <div className="w-full text-center pt-3 pb-2">
+          <span className="text-[11px] text-neutral-500 font-semibold tracking-widest uppercase select-none">
+            {label}
+          </span>
+        </div>
+        {/* Ad image */}
+        <div className="w-full flex justify-center items-center px-2 pb-3">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full"
+            aria-label={alt}
+          >
+            <img
+              src="/ads/300x250.jpg"
+              alt={alt}
+              loading="lazy"
+              className="w-full h-auto object-contain"
+              style={{ maxWidth: 300, maxHeight: 250 }}
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 export default AdSlot;

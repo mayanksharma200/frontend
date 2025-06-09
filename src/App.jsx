@@ -91,18 +91,17 @@ const App = () => {
               path="/"
               element={
                 <>
+                  <ArticlesGrid />
                   <AdSlot
-                    size="728x90"
-                    url="https://www.dell.com/offer"
+                    url="https://lms.pixeltrack.co.in/perf/lms/click?campaign_id=944&publisher_id=VA-667&sub_publisher_id=1"
                     alt="Amazing Dell offer! Click to learn more"
                   />
 
-                  <ArticlesGrid />
-                  <AdSlot
-                    size="1000x300"
-                    url="https://www.dell.com/offer"
+                  {/* <AdSlot
+                    size="300x250"
+                    url="https://lms.pixeltrack.co.in/perf/lms/click?campaign_id=944&publisher_id=VA-667&sub_publisher_id=1"
                     alt="Amazing Dell offer! Click to learn more"
-                  />
+                  /> */}
 
                   <CategoryFilter />
                   <TopReads />
