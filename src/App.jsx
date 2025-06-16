@@ -93,7 +93,7 @@ const App = () => {
                 <>
                   <ArticlesGrid />
                   <AdSlot
-                    url="https://lms.pixeltrack.co.in/perf/lms/click?campaign_id=944&publisher_id=VA-667&sub_publisher_id=1"
+                    url="https://ventes40.gotrackier.com/click?campaign_id=1058&pub_id=2&url_id=1"
                     alt="Amazing Dell offer! Click to learn more"
                   />
 

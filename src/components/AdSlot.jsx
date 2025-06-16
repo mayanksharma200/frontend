@@ -46,7 +46,7 @@ const AdSlot = ({
           aria-label={alt}
         >
           <img
-            src="/ads/728x90.jpg"
+            src="/ads/900x400.jpg"
             alt={alt}
             loading="lazy"
             className="w-full h-auto object-contain"
