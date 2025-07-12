@@ -92,10 +92,10 @@ const App = () => {
               element={
                 <>
                   <ArticlesGrid />
-                  <AdSlot
+                  {/* <AdSlot
                     url="https://ventes40.gotrackier.com/click?campaign_id=1058&pub_id=2&url_id=1"
                     alt="Amazing Dell offer! Click to learn more"
-                  />
+                  /> */}
 
                   {/* <AdSlot
                     size="300x250"
